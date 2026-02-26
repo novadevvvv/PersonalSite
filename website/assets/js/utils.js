@@ -1,4 +1,8 @@
 export const numberFormat = new Intl.NumberFormat();
+export const compactNumberFormat = new Intl.NumberFormat(undefined, {
+	notation: "compact",
+	maximumFractionDigits: 1,
+});
 
 export function escapeHtml(value) {
 	return String(value ?? "")
@@ -20,9 +24,21 @@ export function formatDescription(value) {
 export function animateNumber(element, target, duration = 700) {
 	const parsedTarget = Number(target) || 0;
 	const current = Number(element.dataset.current ?? "0") || 0;
+	const mode = element.dataset.format || "full";
+	const formatValue = (value) => {
+		if (mode === "compact") {
+			if (value >= 1000) {
+				return `${compactNumberFormat.format(value).toUpperCase()}+`;
+			}
+
+			return numberFormat.format(value);
+		}
+
+		return numberFormat.format(value);
+	};
 
 	if (current === parsedTarget) {
-		element.textContent = numberFormat.format(parsedTarget);
+		element.textContent = formatValue(parsedTarget);
 		element.dataset.current = String(parsedTarget);
 		return;
 	}
@@ -35,7 +51,7 @@ export function animateNumber(element, target, duration = 700) {
 		const progress = Math.min(elapsed / duration, 1);
 		const eased = 1 - Math.pow(1 - progress, 3);
 		const value = Math.round(start + (parsedTarget - start) * eased);
-		element.textContent = numberFormat.format(value);
+		element.textContent = formatValue(value);
 
 		if (progress < 1) {
 			requestAnimationFrame(step);

@@ -85,10 +85,24 @@ def enrich_project(project: dict) -> dict:
     if room_id is None:
         return project
 
+    if int(room_id) == -1:
+        project["comingSoon"] = True
+        image_name = project.get("imageName") or ""
+        project["imageName"] = image_name
+        project["imageUrl"] = f"{IMAGE_BASE_URL}{image_name}" if image_name else ""
+        project["stats"] = {
+            "cheerCount": 0,
+            "favoriteCount": 0,
+            "visitCount": 0,
+            "visitorCount": 0,
+        }
+        return project
+
     room_data = get_data(int(room_id))
     stats = room_data.get("Stats") or {}
     image_name = room_data.get("ImageName")
 
+    project["comingSoon"] = False
     project["title"] = room_data.get("Name") or project.get("title")
     project["description"] = room_data.get("Description") or project.get("description")
     project["imageName"] = image_name
@@ -97,6 +111,7 @@ def enrich_project(project: dict) -> dict:
         "cheerCount": stats.get("CheerCount", 0),
         "favoriteCount": stats.get("FavoriteCount", 0),
         "visitCount": stats.get("VisitCount", 0),
+        "visitorCount": stats.get("VisitorCount", 0),
     }
     return project
 

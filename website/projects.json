@@ -7,9 +7,56 @@
         "imageName": "6qvk1h5ikurn8pbam0ouyfqv1.jpg",
         "imageUrl": "https://img.rec.net/6qvk1h5ikurn8pbam0ouyfqv1.jpg",
         "stats": {
-            "cheerCount": 5198,
-            "favoriteCount": 4413,
-            "visitCount": 140922
-        }
+            "cheerCount": 5199,
+            "favoriteCount": 4414,
+            "visitCount": 140942,
+            "visitorCount": 59937
+        },
+        "comingSoon": false
+    },
+    "BreakthroughOpenBeta": {
+        "title": "BreakthroughOpenBeta",
+        "description": "An outdated beta version of DBS-Breakthrough",
+        "link": "https://www.rec.net/room/BreakthroughOpenBeta",
+        "id": 7069854669103207958,
+        "imageName": "2y7s4ma4qz4gifewm4hm9q5x6.jpg",
+        "imageUrl": "https://img.rec.net/2y7s4ma4qz4gifewm4hm9q5x6.jpg",
+        "stats": {
+            "cheerCount": 2268,
+            "favoriteCount": 2822,
+            "visitCount": 119891,
+            "visitorCount": 23751
+        },
+        "comingSoon": false
+    },
+    "GeonosisLanding": {
+        "title": "Geonosis Landing",
+        "description": "",
+        "link": "https://www.rec.net/room/GeonosisLanding",
+        "id": -1,
+        "imageName": "",
+        "imageUrl": "",
+        "stats": {
+            "cheerCount": 0,
+            "favoriteCount": 0,
+            "visitCount": 0,
+            "visitorCount": 0
+        },
+        "comingSoon": true
+    },
+    "DarkEcho": {
+        "title": "Dark Echo",
+        "description": "",
+        "link": "https://www.rec.net/room/DarkEcho",
+        "id": -1,
+        "imageName": "",
+        "imageUrl": "",
+        "stats": {
+            "cheerCount": 0,
+            "favoriteCount": 0,
+            "visitCount": 0,
+            "visitorCount": 0
+        },
+        "comingSoon": true
     }
 }

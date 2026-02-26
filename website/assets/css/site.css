@@ -83,6 +83,24 @@ section {
 	padding-bottom: .5rem;
 }
 
+.totals-strip {
+	padding: 1rem 1.25rem;
+}
+
+.totals-item {
+	padding: .65rem .4rem;
+	border-radius: .75rem;
+	background: rgba(255, 255, 255, .03);
+	border: 1px solid rgba(255, 255, 255, .08);
+}
+
+.totals-number {
+	font-size: 1.35rem;
+	font-weight: 800;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
 .section-title {
 	font-weight: 800;
 	letter-spacing: .02em;
@@ -142,6 +160,11 @@ section {
 
 .smooth-count {
 	font-variant-numeric: tabular-nums;
+}
+
+.coming-soon-card {
+	opacity: .92;
+	border-style: dashed;
 }
 
 footer {

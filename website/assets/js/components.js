@@ -8,7 +8,7 @@ export function renderProjectCard(project) {
 	const visitCount = Number(stats.visitCount || 0);
 	const visitorCount = Number(stats.visitorCount || 0);
 	const imageUrl = project.imageUrl || (project.imageName ? `https://img.rec.net/${project.imageName}` : "");
-	const safeImageUrl = imageUrl || "https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=1200&q=80";
+	const safeImageUrl = imageUrl || (isComingSoon ? "assets/comingSoon.jpg" : "https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=1200&q=80");
 	const title = escapeHtml(project.title || "Untitled Project");
 	const description = formatDescription(
 		isComingSoon
@@ -48,7 +48,7 @@ export function renderProjectRow(project) {
 	const visitCount = Number(stats.visitCount || 0);
 	const visitorCount = Number(stats.visitorCount || 0);
 	const imageUrl = project.imageUrl || (project.imageName ? `https://img.rec.net/${project.imageName}` : "");
-	const safeImageUrl = imageUrl || "https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=1200&q=80";
+	const safeImageUrl = imageUrl || (isComingSoon ? "assets/comingSoon.jpg" : "https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=1200&q=80");
 	const title = escapeHtml(project.title || "Untitled Project");
 	const description = formatDescription(
 		isComingSoon

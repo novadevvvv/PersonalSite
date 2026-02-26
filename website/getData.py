@@ -7,6 +7,7 @@ from pathlib import Path
 API_KEY_ENV = "RecRoomPrimaryKey"
 PROJECTS_FILE = Path(__file__).with_name("projects.json")
 IMAGE_BASE_URL = "https://img.rec.net/"
+COMING_SOON_IMAGE = "comingSoon.jpg"
 
 
 def get_data(room_id: int) -> dict:
@@ -89,7 +90,7 @@ def enrich_project(project: dict) -> dict:
         project["comingSoon"] = True
         image_name = project.get("imageName") or ""
         project["imageName"] = image_name
-        project["imageUrl"] = f"{IMAGE_BASE_URL}{image_name}" if image_name else ""
+        project["imageUrl"] = f"{IMAGE_BASE_URL}{image_name}" if image_name else COMING_SOON_IMAGE
         project["stats"] = {
             "cheerCount": 0,
             "favoriteCount": 0,

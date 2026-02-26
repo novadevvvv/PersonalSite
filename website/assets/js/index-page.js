@@ -11,6 +11,14 @@ const totalVisitors = document.getElementById("totalVisitors");
 
 let lastSignature = "";
 
+function animateMetric(element, value, duration = 900) {
+	if (!element) {
+		return;
+	}
+
+	animateNumber(element, value, duration);
+}
+
 function animateVisibleCounts(scope = document) {
 	const elements = scope.querySelectorAll(".smooth-count[data-target]");
 	elements.forEach((element) => {
@@ -25,17 +33,17 @@ function buildSignature(projects) {
 function renderProjects(projects) {
 	if (!projects.length) {
 		projectsGrid.innerHTML = '<div class="col-12"><div class="alert alert-secondary mb-0">No projects found in projects.json.</div></div>';
-		animateNumber(projectsCount, 0, 700);
-		animateNumber(totalVisits, 0, 800);
-		animateNumber(totalFavorites, 0, 800);
-		animateNumber(totalCheers, 0, 800);
-		animateNumber(totalVisitors, 0, 800);
+		animateMetric(projectsCount, 0, 700);
+		animateMetric(totalVisits, 0, 800);
+		animateMetric(totalFavorites, 0, 800);
+		animateMetric(totalCheers, 0, 800);
+		animateMetric(totalVisitors, 0, 800);
 		return;
 	}
 
 	projectsGrid.innerHTML = projects.map(renderProjectCard).join("");
 	animateVisibleCounts(projectsGrid);
-	animateNumber(projectsCount, projects.length, 900);
+	animateMetric(projectsCount, projects.length, 900);
 
 	const totals = projects.reduce((acc, project) => {
 		if (project.comingSoon === true || Number(project.id) === -1) {
@@ -55,10 +63,10 @@ function renderProjects(projects) {
 		visitorCount: 0,
 	});
 
-	animateNumber(totalVisits, totals.visitCount, 1000);
-	animateNumber(totalFavorites, totals.favoriteCount, 1000);
-	animateNumber(totalCheers, totals.cheerCount, 1000);
-	animateNumber(totalVisitors, totals.visitorCount, 1000);
+	animateMetric(totalVisits, totals.visitCount, 1000);
+	animateMetric(totalFavorites, totals.favoriteCount, 1000);
+	animateMetric(totalCheers, totals.cheerCount, 1000);
+	animateMetric(totalVisitors, totals.visitorCount, 1000);
 }
 
 async function refreshProjects() {

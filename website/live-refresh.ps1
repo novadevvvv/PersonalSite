@@ -1,4 +1,4 @@
 while ($true) {
 	python website/getData.py
-	Start-Sleep -Seconds 3
+	Start-Sleep -Seconds 60
 }

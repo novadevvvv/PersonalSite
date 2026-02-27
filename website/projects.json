@@ -7,10 +7,11 @@
         "imageName": "6qvk1h5ikurn8pbam0ouyfqv1.jpg",
         "imageUrl": "https://img.rec.net/6qvk1h5ikurn8pbam0ouyfqv1.jpg",
         "stats": {
-            "cheerCount": 5199,
-            "favoriteCount": 4414,
-            "visitCount": 140942,
-            "visitorCount": 59937
+            "cheerCount": 5292,
+            "favoriteCount": 4481,
+            "visitCount": 143864,
+            "visitorCount": 61611,
+            "tokenEarned": 3902375
         },
         "comingSoon": false,
         "earningsDistribution": 20
@@ -23,10 +24,11 @@
         "imageName": "2y7s4ma4qz4gifewm4hm9q5x6.jpg",
         "imageUrl": "https://img.rec.net/2y7s4ma4qz4gifewm4hm9q5x6.jpg",
         "stats": {
-            "cheerCount": 2268,
-            "favoriteCount": 2822,
-            "visitCount": 119891,
-            "visitorCount": 23751
+            "cheerCount": 2269,
+            "favoriteCount": 2823,
+            "visitCount": 119913,
+            "visitorCount": 23764,
+            "tokenEarned": 251891
         },
         "comingSoon": false,
         "earningsDistribution": 0
@@ -37,12 +39,13 @@
         "link": "https://www.rec.net/room/GeonosisLanding",
         "id": -1,
         "imageName": "",
-        "imageUrl": "",
+        "imageUrl": "comingSoon.jpg",
         "stats": {
             "cheerCount": 0,
             "favoriteCount": 0,
             "visitCount": 0,
-            "visitorCount": 0
+            "visitorCount": 0,
+            "tokenEarned": 0
         },
         "comingSoon": true,
         "earningsDistribution": 0
@@ -53,12 +56,13 @@
         "link": "https://www.rec.net/room/DarkEcho",
         "id": -1,
         "imageName": "",
-        "imageUrl": "",
+        "imageUrl": "comingSoon.jpg",
         "stats": {
             "cheerCount": 0,
             "favoriteCount": 0,
             "visitCount": 0,
-            "visitorCount": 0
+            "visitorCount": 0,
+            "tokenEarned": 0
         },
         "comingSoon": true,
         "earningsDistribution": 50

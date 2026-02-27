@@ -16,7 +16,7 @@ export function renderProjectCard(project) {
 			: (project.description || "No description added yet.")
 	);
 	const link = escapeHtml(project.link || "#");
-	const statsLink = escapeHtml(project.statsPath || `/project/${encodeURIComponent(String(project.id || ""))}/stats`);
+	const statsLink = escapeHtml(project.statsPath || "");
 
 	return `
 		<div class="col-md-6 col-lg-4">
@@ -35,7 +35,9 @@ export function renderProjectCard(project) {
 							<span class="badge text-bg-secondary"><i class="bi bi-people-fill me-1"></i><span class="smooth-count" data-target="${visitorCount}">0</span> Players</span>
 						 </div>
 						 <div class="d-flex gap-2 mt-auto">
-							<a href="${statsLink}" class="btn btn-outline-info btn-sm" target="_blank" rel="noopener noreferrer">View Stats</a>
+							${statsLink
+								? `<a href="${statsLink}" class="btn btn-outline-info btn-sm" target="_blank" rel="noopener noreferrer">View Stats</a>`
+								: `<button class="btn btn-outline-secondary btn-sm" type="button" disabled>Stats Unavailable</button>`}
 							<a href="${link}" class="btn btn-outline-light btn-sm" target="_blank" rel="noopener noreferrer">View Project</a>
 						 </div>`}
 				</div>
@@ -56,11 +58,11 @@ export function renderProjectRow(project) {
 	const title = escapeHtml(project.title || "Untitled Project");
 	const description = formatDescription(
 		isComingSoon
-			? (project.description || "Still in progress — updates coming soon.")
+			? (project.description || "Still in progress - updates coming soon.")
 			: (project.description || "No description added yet.")
 	);
 	const link = escapeHtml(project.link || "#");
-	const statsLink = escapeHtml(project.statsPath || `/project/${encodeURIComponent(String(project.id || ""))}/stats`);
+	const statsLink = escapeHtml(project.statsPath || "");
 
 	return `
 		<article class="glass-card p-4 ${isComingSoon ? "coming-soon-card" : ""}">
@@ -81,7 +83,9 @@ export function renderProjectRow(project) {
 							<span class="badge text-bg-secondary"><i class="bi bi-people-fill me-1"></i><span class="smooth-count" data-target="${visitorCount}">0</span> Players</span>
 						 </div>
 						 <div class="d-flex gap-2 flex-wrap">
-							<a href="${statsLink}" class="btn btn-outline-info" target="_blank" rel="noopener noreferrer">View Stats</a>
+							${statsLink
+								? `<a href="${statsLink}" class="btn btn-outline-info" target="_blank" rel="noopener noreferrer">View Stats</a>`
+								: `<button class="btn btn-outline-secondary" type="button" disabled>Stats Unavailable</button>`}
 							<a href="${link}" class="btn btn-outline-light" target="_blank" rel="noopener noreferrer">Open Project</a>
 						 </div>`}
 				</div>

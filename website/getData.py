@@ -2,6 +2,7 @@ import json
 import os
 import urllib.error
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -124,6 +125,24 @@ def extract_room_token_candidates(project_key: str, project: dict) -> list[str]:
     return unique_candidates
 
 
+def to_percent(value) -> float:
+    if value is None:
+        return 100.0
+
+    if isinstance(value, str):
+        cleaned = value.strip().replace("%", "")
+        if not cleaned:
+            return 100.0
+        parsed = float(cleaned)
+    else:
+        parsed = float(value)
+
+    if 0 <= parsed <= 1:
+        return parsed * 100
+
+    return parsed
+
+
 def get_tokens_earned(project_key: str, project: dict) -> int:
     earnings_token = os.getenv("RECROOMACCESSTOKEN") or os.getenv("RecRoomAccessToken")
     if not earnings_token:
@@ -135,13 +154,36 @@ def get_tokens_earned(project_key: str, project: dict) -> int:
 
     for room_token in room_tokens:
         try:
-            return getEarnings(room_token)
+            total_tokens = int(getEarnings(room_token))
+            distribution_percent = to_percent(project.get("earningsDistribution"))
+            return int(round(total_tokens * (distribution_percent / 100)))
         except RuntimeError as error:
             print(f"Token stats unavailable for {project_key} ({room_token}): {error}")
         except ValueError as error:
             print(f"Token stats invalid for {project_key} ({room_token}): {error}")
 
     return int((project.get("stats") or {}).get("tokenEarned") or 0)
+
+
+def update_daily_visit_history(project: dict, visit_count: int) -> list[dict]:
+    today = datetime.now(timezone.utc).date().isoformat()
+    history = project.get("visitHistory")
+
+    if isinstance(history, list):
+        normalized = [
+            entry
+            for entry in history
+            if isinstance(entry, dict) and "date" in entry and "visitCount" in entry
+        ]
+    else:
+        normalized = []
+
+    if normalized and normalized[-1].get("date") == today:
+        normalized[-1]["visitCount"] = int(visit_count)
+        return normalized
+
+    normalized.append({"date": today, "visitCount": int(visit_count)})
+    return normalized
 
 
 def enrich_project(project_key: str, project: dict) -> dict:
@@ -180,6 +222,7 @@ def enrich_project(project_key: str, project: dict) -> dict:
         "visitorCount": stats.get("VisitorCount", 0),
         "tokenEarned": tokens_earned,
     }
+    project["visitHistory"] = update_daily_visit_history(project, project["stats"]["visitCount"])
     return project
 
 

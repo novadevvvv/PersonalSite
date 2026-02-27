@@ -3,23 +3,6 @@ import json
 import urllib.error
 import urllib.request
 
-def _to_percent(value) -> float:
-    if value is None:
-        return 100.0
-
-    if isinstance(value, str):
-        cleaned = value.strip().replace("%", "")
-        if not cleaned:
-            return 100.0
-        parsed = float(cleaned)
-    else:
-        parsed = float(value)
-
-    if 0 <= parsed <= 1:
-        return parsed * 100
-
-    return parsed
-
 
 def getEarnings(room_token: str) -> int:
     token = os.getenv("RECROOMACCESSTOKEN") or os.getenv("RecRoomAccessToken")
@@ -55,8 +38,6 @@ def getEarnings(room_token: str) -> int:
         if not isinstance(item, dict):
             continue
         room_total = int(item.get("all_time_tokens_earned", 0))
-        distribution_percent = _to_percent(item.get("earnings_distribution"))
-        my_earned = round(room_total * (distribution_percent / 100))
-        total += int(my_earned)
+        total += int(room_total)
 
     return int(total)

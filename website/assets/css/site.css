@@ -38,11 +38,12 @@ section {
 .hero::after {
 	content: "";
 	position: absolute;
-	width: 280px;
-	height: 280px;
-	right: -100px;
-	top: -100px;
-	background: radial-gradient(circle, rgba(167, 139, 250, .26) 0, transparent 68%);
+	width: 420px;
+	height: 420px;
+	right: -220px;
+	top: -220px;
+	background: radial-gradient(circle, rgba(167, 139, 250, .14) 0, rgba(167, 139, 250, .05) 35%, transparent 75%);
+	filter: blur(24px);
 	pointer-events: none;
 }
 
@@ -160,6 +161,19 @@ section {
 
 .smooth-count {
 	font-variant-numeric: tabular-nums;
+}
+
+.stats-page-card {
+	padding: 1.5rem;
+}
+
+.chart-wrap {
+	position: relative;
+	min-height: 320px;
+	background: rgba(255, 255, 255, .02);
+	border: 1px solid rgba(255, 255, 255, .1);
+	border-radius: .9rem;
+	padding: .75rem;
 }
 
 .coming-soon-card {

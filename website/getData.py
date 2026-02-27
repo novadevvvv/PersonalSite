@@ -4,7 +4,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-API_KEY_ENV = "RecRoomPrimaryKey"
+API_KEY_ENV = "RECROOMPRIMARYKEY"
 PROJECTS_FILE = Path(__file__).with_name("projects.json")
 IMAGE_BASE_URL = "https://img.rec.net/"
 COMING_SOON_IMAGE = "comingSoon.jpg"

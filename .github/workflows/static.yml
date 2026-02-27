@@ -6,6 +6,10 @@ on:
   push:
     branches: ["main"]
 
+  # Runs on a schedule (GitHub minimum interval is 5 minutes)
+  schedule:
+    - cron: "*/5 * * * *"
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 

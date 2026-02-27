@@ -16,7 +16,7 @@ export function renderProjectCard(project) {
 			: (project.description || "No description added yet.")
 	);
 	const link = escapeHtml(project.link || "#");
-	const statsLink = `/project/${encodeURIComponent(String(project.id || ""))}/stats`;
+	const statsLink = escapeHtml(project.statsPath || `/project/${encodeURIComponent(String(project.id || ""))}/stats`);
 
 	return `
 		<div class="col-md-6 col-lg-4">
@@ -60,7 +60,7 @@ export function renderProjectRow(project) {
 			: (project.description || "No description added yet.")
 	);
 	const link = escapeHtml(project.link || "#");
-	const statsLink = `/project/${encodeURIComponent(String(project.id || ""))}/stats`;
+	const statsLink = escapeHtml(project.statsPath || `/project/${encodeURIComponent(String(project.id || ""))}/stats`);
 
 	return `
 		<article class="glass-card p-4 ${isComingSoon ? "coming-soon-card" : ""}">

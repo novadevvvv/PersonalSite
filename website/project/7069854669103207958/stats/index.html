@@ -34,8 +34,53 @@
                     <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">2,823</p><small class="text-secondary">Favorites</small></div></div>
                     <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">2,269</p><small class="text-secondary">Cheers</small></div></div>
                 </div>
+                <div class="row g-3 mt-2 mb-4">
+                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">0</p><small class="text-secondary">Total Growth</small></div></div>
+                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">0</p><small class="text-secondary">Avg Daily Growth</small></div></div>
+                </div>
+                <div style="position:relative;min-height:320px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.1);border-radius:.9rem;padding:.75rem;">
+                    <canvas id="visitsChart" height="120"></canvas>
+                </div>
             </div>
         </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+        const labels = ["2026-02-27"];
+        const data = [119913];
+
+        new window.Chart(document.getElementById("visitsChart"), {
+            type: "line",
+            data: {
+                labels,
+                datasets: [{
+                    label: "Visits",
+                    data,
+                    borderColor: "rgba(34, 211, 238, 0.95)",
+                    backgroundColor: "rgba(34, 211, 238, 0.18)",
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: {
+                        ticks: { color: "rgba(233, 237, 245, 0.7)" },
+                        grid: { color: "rgba(255,255,255,0.08)" },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: "rgba(233, 237, 245, 0.7)" },
+                        grid: { color: "rgba(255,255,255,0.08)" },
+                    },
+                },
+            },
+        });
+    </script>
 </body>
 </html>

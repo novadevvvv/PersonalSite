@@ -2,6 +2,8 @@ import json
 import os
 import urllib.error
 import urllib.request
+from datetime import datetime, timezone
+from html import escape
 from pathlib import Path
 
 API_KEY_ENV = "RECROOMPRIMARYKEY"
@@ -9,6 +11,32 @@ PROJECTS_FILE = Path(__file__).with_name("projects.json")
 IMAGE_BASE_URL = "https://img.rec.net/"
 COMING_SOON_IMAGE = "comingSoon.jpg"
 PROJECT_ROUTES_DIR = Path(__file__).with_name("project")
+
+
+def format_description_html(value: str) -> str:
+    text = escape(value or "")
+    return text.replace("\\n", "<br>").replace("\n", "<br>")
+
+
+def update_daily_visit_history(project: dict, visit_count: int) -> list[dict]:
+    today = datetime.now(timezone.utc).date().isoformat()
+    history = project.get("visitHistory")
+
+    if isinstance(history, list):
+        normalized = [
+            item
+            for item in history
+            if isinstance(item, dict) and "date" in item and "visitCount" in item
+        ]
+    else:
+        normalized = []
+
+    if normalized and normalized[-1].get("date") == today:
+        normalized[-1]["visitCount"] = int(visit_count)
+        return normalized
+
+    normalized.append({"date": today, "visitCount": int(visit_count)})
+    return normalized
 
 
 def get_data(room_id: int) -> dict:
@@ -92,6 +120,8 @@ def enrich_project(project: dict) -> dict:
         image_name = project.get("imageName") or ""
         project["imageName"] = image_name
         project["imageUrl"] = f"{IMAGE_BASE_URL}{image_name}" if image_name else COMING_SOON_IMAGE
+        project.pop("statsPath", None)
+        project.pop("visitHistory", None)
         project["stats"] = {
             "cheerCount": 0,
             "favoriteCount": 0,
@@ -109,12 +139,14 @@ def enrich_project(project: dict) -> dict:
     project["description"] = room_data.get("Description") or project.get("description")
     project["imageName"] = image_name
     project["imageUrl"] = f"{IMAGE_BASE_URL}{image_name}" if image_name else ""
+    project["statsPath"] = f"/project/{int(room_id)}/stats"
     project["stats"] = {
         "cheerCount": stats.get("CheerCount", 0),
         "favoriteCount": stats.get("FavoriteCount", 0),
         "visitCount": stats.get("VisitCount", 0),
         "visitorCount": stats.get("VisitorCount", 0),
     }
+    project["visitHistory"] = update_daily_visit_history(project, int(project["stats"]["visitCount"]))
     return project
 
 
@@ -129,6 +161,29 @@ def write_project_stats_pages(projects: dict) -> None:
         stats = project.get("stats") or {}
         title = project.get("title") or "Project"
         description = project.get("description") or ""
+        visit_history = project.get("visitHistory") if isinstance(project.get("visitHistory"), list) else []
+
+        points = [
+            {
+                "date": str(item.get("date")),
+                "visitCount": int(item.get("visitCount", 0)),
+            }
+            for item in visit_history
+            if isinstance(item, dict) and item.get("date") is not None
+        ]
+        points.sort(key=lambda item: item["date"])
+        if not points:
+            points = [{"date": "Today", "visitCount": int(stats.get("visitCount", 0))}]
+
+        labels = [point["date"] for point in points]
+        values = [point["visitCount"] for point in points]
+        first_value = values[0] if values else 0
+        last_value = values[-1] if values else 0
+        total_growth = max(0, last_value - first_value)
+        average_growth = round(total_growth / max(len(values) - 1, 1))
+
+        safe_title = escape(title)
+        safe_description = format_description_html(description)
 
         route_dir = PROJECT_ROUTES_DIR / str(room_id) / "stats"
         route_dir.mkdir(parents=True, exist_ok=True)
@@ -138,7 +193,7 @@ def write_project_stats_pages(projects: dict) -> None:
 <head>
     <meta charset=\"utf-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-    <title>Nova • {title} Stats</title>
+    <title>Nova • {safe_title} Stats</title>
     <link rel=\"icon\" type=\"image/svg+xml\" href=\"../../../assets/favicon.svg\">
     <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
     <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
@@ -161,17 +216,62 @@ def write_project_stats_pages(projects: dict) -> None:
     <main class=\"py-5\">
         <section class=\"container py-4\">
             <div class=\"glass-card\">
-                <h1 class=\"fw-bold mb-2\">{title}</h1>
-                <p class=\"text-secondary mb-4\">{description}</p>
+                <h1 class="fw-bold mb-2">{safe_title}</h1>
+                <p class="text-secondary mb-4">{safe_description}</p>
                 <div class=\"row g-3\">
                     <div class=\"col-12 col-md-3\"><div class=\"totals-item\"><p class=\"totals-number mb-1\">{int(stats.get('visitCount', 0)):,}</p><small class=\"text-secondary\">Visits</small></div></div>
                     <div class=\"col-12 col-md-3\"><div class=\"totals-item\"><p class=\"totals-number mb-1\">{int(stats.get('visitorCount', 0)):,}</p><small class=\"text-secondary\">Unique Players</small></div></div>
                     <div class=\"col-12 col-md-3\"><div class=\"totals-item\"><p class=\"totals-number mb-1\">{int(stats.get('favoriteCount', 0)):,}</p><small class=\"text-secondary\">Favorites</small></div></div>
                     <div class=\"col-12 col-md-3\"><div class=\"totals-item\"><p class=\"totals-number mb-1\">{int(stats.get('cheerCount', 0)):,}</p><small class=\"text-secondary\">Cheers</small></div></div>
                 </div>
+                <div class="row g-3 mt-2 mb-4">
+                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">{total_growth:,}</p><small class="text-secondary">Total Growth</small></div></div>
+                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">{average_growth:,}</p><small class="text-secondary">Avg Daily Growth</small></div></div>
+                </div>
+                <div style="position:relative;min-height:320px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.1);border-radius:.9rem;padding:.75rem;">
+                    <canvas id="visitsChart" height="120"></canvas>
+                </div>
             </div>
         </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+        const labels = {json.dumps(labels)};
+        const data = {json.dumps(values)};
+
+        new window.Chart(document.getElementById("visitsChart"), {{
+            type: "line",
+            data: {{
+                labels,
+                datasets: [{{
+                    label: "Visits",
+                    data,
+                    borderColor: "rgba(34, 211, 238, 0.95)",
+                    backgroundColor: "rgba(34, 211, 238, 0.18)",
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                }}],
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {{ legend: {{ display: false }} }},
+                scales: {{
+                    x: {{
+                        ticks: {{ color: "rgba(233, 237, 245, 0.7)" }},
+                        grid: {{ color: "rgba(255,255,255,0.08)" }},
+                    }},
+                    y: {{
+                        beginAtZero: true,
+                        ticks: {{ color: "rgba(233, 237, 245, 0.7)" }},
+                        grid: {{ color: "rgba(255,255,255,0.08)" }},
+                    }},
+                }},
+            }},
+        }});
+    </script>
 </body>
 </html>
 """

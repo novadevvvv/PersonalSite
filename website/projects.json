@@ -43,10 +43,10 @@
             }
         ]
     },
-    "GeonosisLanding": {
-        "title": "Geonosis Landing",
+    "GalacticCampaign": {
+        "title": "Galactic Campaign",
         "description": "",
-        "link": "https://www.rec.net/room/GeonosisLanding",
+        "link": "https://www.rec.net/room/GalacticCampaign",
         "id": -1,
         "imageName": "",
         "imageUrl": "comingSoon.jpg",

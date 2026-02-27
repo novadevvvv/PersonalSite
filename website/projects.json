@@ -7,14 +7,12 @@
         "imageName": "6qvk1h5ikurn8pbam0ouyfqv1.jpg",
         "imageUrl": "https://img.rec.net/6qvk1h5ikurn8pbam0ouyfqv1.jpg",
         "stats": {
-            "cheerCount": 5294,
-            "favoriteCount": 4483,
-            "visitCount": 143890,
-            "visitorCount": 61623,
-            "tokenEarned": 3902375
+            "cheerCount": 5298,
+            "favoriteCount": 4486,
+            "visitCount": 144001,
+            "visitorCount": 61678
         },
-        "comingSoon": false,
-        "earningsDistribution": 20
+        "comingSoon": false
     },
     "BreakthroughOpenBeta": {
         "title": "BreakthroughOpenBeta",
@@ -27,11 +25,9 @@
             "cheerCount": 2269,
             "favoriteCount": 2823,
             "visitCount": 119913,
-            "visitorCount": 23764,
-            "tokenEarned": 251891
+            "visitorCount": 23764
         },
-        "comingSoon": false,
-        "earningsDistribution": 0
+        "comingSoon": false
     },
     "GeonosisLanding": {
         "title": "Geonosis Landing",
@@ -44,11 +40,9 @@
             "cheerCount": 0,
             "favoriteCount": 0,
             "visitCount": 0,
-            "visitorCount": 0,
-            "tokenEarned": 0
+            "visitorCount": 0
         },
-        "comingSoon": true,
-        "earningsDistribution": 0
+        "comingSoon": true
     },
     "DarkEcho": {
         "title": "Dark Echo",
@@ -61,10 +55,8 @@
             "cheerCount": 0,
             "favoriteCount": 0,
             "visitCount": 0,
-            "visitorCount": 0,
-            "tokenEarned": 0
+            "visitorCount": 0
         },
-        "comingSoon": true,
-        "earningsDistribution": 50
+        "comingSoon": true
     }
 }

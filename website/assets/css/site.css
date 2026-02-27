@@ -163,19 +163,6 @@ section {
 	font-variant-numeric: tabular-nums;
 }
 
-.stats-page-card {
-	padding: 1.5rem;
-}
-
-.chart-wrap {
-	position: relative;
-	min-height: 320px;
-	background: rgba(255, 255, 255, .02);
-	border: 1px solid rgba(255, 255, 255, .1);
-	border-radius: .9rem;
-	padding: .75rem;
-}
-
 .coming-soon-card {
 	opacity: .97;
 	border-style: dashed;

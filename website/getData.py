@@ -2,11 +2,7 @@ import json
 import os
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urlparse
-
-from getEarnings import getEarnings
 
 API_KEY_ENV = "RECROOMPRIMARYKEY"
 PROJECTS_FILE = Path(__file__).with_name("projects.json")
@@ -85,108 +81,7 @@ def get_data(room_id: int) -> dict:
         raise RuntimeError(f"Network error for room {room_id}: {error.reason}") from error
 
 
-def extract_room_token_candidates(project_key: str, project: dict) -> list[str]:
-    candidates: list[str] = []
-
-    explicit_token = (project.get("roomToken") or "").strip()
-    if explicit_token:
-        candidates.append(explicit_token)
-
-    room_id = project.get("id")
-    if room_id is not None:
-        room_id_token = str(room_id).strip()
-        if room_id_token and room_id_token != "-1":
-            candidates.append(room_id_token)
-
-    title_token = (project.get("title") or "").strip()
-    if title_token:
-        candidates.append(title_token)
-
-    if project_key:
-        key_token = project_key.strip()
-        if key_token:
-            candidates.append(key_token)
-
-    link = (project.get("link") or "").strip()
-    if link:
-        path_parts = [part for part in urlparse(link).path.split("/") if part]
-        if len(path_parts) >= 2 and path_parts[0].lower() == "room":
-            candidates.append(path_parts[1])
-
-    unique_candidates: list[str] = []
-    seen = set()
-    for candidate in candidates:
-        normalized = candidate.casefold()
-        if normalized in seen:
-            continue
-        seen.add(normalized)
-        unique_candidates.append(candidate)
-
-    return unique_candidates
-
-
-def to_percent(value) -> float:
-    if value is None:
-        return 100.0
-
-    if isinstance(value, str):
-        cleaned = value.strip().replace("%", "")
-        if not cleaned:
-            return 100.0
-        parsed = float(cleaned)
-    else:
-        parsed = float(value)
-
-    if 0 <= parsed <= 1:
-        return parsed * 100
-
-    return parsed
-
-
-def get_tokens_earned(project_key: str, project: dict) -> int:
-    earnings_token = os.getenv("RECROOMACCESSTOKEN") or os.getenv("RecRoomAccessToken")
-    if not earnings_token:
-        return int((project.get("stats") or {}).get("tokenEarned") or 0)
-
-    room_tokens = extract_room_token_candidates(project_key, project)
-    if not room_tokens:
-        return int((project.get("stats") or {}).get("tokenEarned") or 0)
-
-    for room_token in room_tokens:
-        try:
-            total_tokens = int(getEarnings(room_token))
-            distribution_percent = to_percent(project.get("earningsDistribution"))
-            return int(round(total_tokens * (distribution_percent / 100)))
-        except RuntimeError as error:
-            print(f"Token stats unavailable for {project_key} ({room_token}): {error}")
-        except ValueError as error:
-            print(f"Token stats invalid for {project_key} ({room_token}): {error}")
-
-    return int((project.get("stats") or {}).get("tokenEarned") or 0)
-
-
-def update_daily_visit_history(project: dict, visit_count: int) -> list[dict]:
-    today = datetime.now(timezone.utc).date().isoformat()
-    history = project.get("visitHistory")
-
-    if isinstance(history, list):
-        normalized = [
-            entry
-            for entry in history
-            if isinstance(entry, dict) and "date" in entry and "visitCount" in entry
-        ]
-    else:
-        normalized = []
-
-    if normalized and normalized[-1].get("date") == today:
-        normalized[-1]["visitCount"] = int(visit_count)
-        return normalized
-
-    normalized.append({"date": today, "visitCount": int(visit_count)})
-    return normalized
-
-
-def enrich_project(project_key: str, project: dict) -> dict:
+def enrich_project(project: dict) -> dict:
     room_id = project.get("id")
     if room_id is None:
         return project
@@ -201,7 +96,6 @@ def enrich_project(project_key: str, project: dict) -> dict:
             "favoriteCount": 0,
             "visitCount": 0,
             "visitorCount": 0,
-            "tokenEarned": 0,
         }
         return project
 
@@ -214,15 +108,12 @@ def enrich_project(project_key: str, project: dict) -> dict:
     project["description"] = room_data.get("Description") or project.get("description")
     project["imageName"] = image_name
     project["imageUrl"] = f"{IMAGE_BASE_URL}{image_name}" if image_name else ""
-    tokens_earned = get_tokens_earned(project_key, project)
     project["stats"] = {
         "cheerCount": stats.get("CheerCount", 0),
         "favoriteCount": stats.get("FavoriteCount", 0),
         "visitCount": stats.get("VisitCount", 0),
         "visitorCount": stats.get("VisitorCount", 0),
-        "tokenEarned": tokens_earned,
     }
-    project["visitHistory"] = update_daily_visit_history(project, project["stats"]["visitCount"])
     return project
 
 
@@ -236,7 +127,7 @@ def update_projects() -> dict:
 
     for key, project in projects.items():
         try:
-            projects[key] = enrich_project(key, project)
+            projects[key] = enrich_project(project)
         except RuntimeError as error:
             print(f"Skipped {key}: {error}")
 

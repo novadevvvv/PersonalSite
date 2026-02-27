@@ -7,6 +7,7 @@ export function renderProjectCard(project) {
 	const favoriteCount = Number(stats.favoriteCount || 0);
 	const visitCount = Number(stats.visitCount || 0);
 	const visitorCount = Number(stats.visitorCount || 0);
+	const tokenEarned = Number(stats.tokenEarned || 0);
 	const imageUrl = project.imageUrl || (project.imageName ? `https://img.rec.net/${project.imageName}` : "");
 	const safeImageUrl = imageUrl || (isComingSoon ? "assets/comingSoon.jpg" : "https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=1200&q=80");
 	const title = escapeHtml(project.title || "Untitled Project");
@@ -28,6 +29,7 @@ export function renderProjectCard(project) {
 						? `<div class="d-flex flex-wrap gap-2 mt-auto mb-3"><span class="badge text-bg-warning"><i class="bi bi-hourglass-split me-1"></i>Coming Soon</span></div>
 						   <button class="btn btn-outline-secondary btn-sm" type="button" disabled>In Development</button>`
 						: `<div class="d-flex flex-wrap gap-2 mt-auto mb-3 stats-badges">
+							<span class="badge text-bg-warning"><i class="bi bi-coin me-1"></i><span class="smooth-count" data-target="${tokenEarned}">0</span> Earned</span>
 							<span class="badge text-bg-primary-subtle"><i class="bi bi-stars me-1"></i><span class="smooth-count" data-target="${cheerCount}">0</span> Cheers</span>
 							<span class="badge text-bg-info-subtle"><i class="bi bi-heart-fill me-1"></i><span class="smooth-count" data-target="${favoriteCount}">0</span> Favorites</span>
 							<span class="badge text-bg-success-subtle"><i class="bi bi-activity me-1"></i><span class="smooth-count" data-target="${visitCount}">0</span> Visits</span>
@@ -47,6 +49,7 @@ export function renderProjectRow(project) {
 	const favoriteCount = Number(stats.favoriteCount || 0);
 	const visitCount = Number(stats.visitCount || 0);
 	const visitorCount = Number(stats.visitorCount || 0);
+	const tokenEarned = Number(stats.tokenEarned || 0);
 	const imageUrl = project.imageUrl || (project.imageName ? `https://img.rec.net/${project.imageName}` : "");
 	const safeImageUrl = imageUrl || (isComingSoon ? "assets/comingSoon.jpg" : "https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=1200&q=80");
 	const title = escapeHtml(project.title || "Untitled Project");
@@ -70,6 +73,7 @@ export function renderProjectRow(project) {
 						? `<div class="d-flex flex-wrap gap-2 mb-3"><span class="badge text-bg-warning"><i class="bi bi-hourglass-split me-1"></i>Coming Soon</span></div>
 						   <button class="btn btn-outline-secondary" type="button" disabled>In Development</button>`
 						: `<div class="d-flex flex-wrap gap-2 mb-3 stats-badges">
+							<span class="badge text-bg-warning"><i class="bi bi-coin me-1"></i><span class="smooth-count" data-target="${tokenEarned}">0</span> Earned</span>
 							<span class="badge text-bg-primary-subtle"><i class="bi bi-stars me-1"></i><span class="smooth-count" data-target="${cheerCount}">0</span> Cheers</span>
 							<span class="badge text-bg-info-subtle"><i class="bi bi-heart-fill me-1"></i><span class="smooth-count" data-target="${favoriteCount}">0</span> Favorites</span>
 							<span class="badge text-bg-success-subtle"><i class="bi bi-activity me-1"></i><span class="smooth-count" data-target="${visitCount}">0</span> Visits</span>

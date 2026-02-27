@@ -3,6 +3,9 @@ import os
 import urllib.error
 import urllib.request
 from pathlib import Path
+from urllib.parse import urlparse
+
+from getEarnings import getEarnings
 
 API_KEY_ENV = "RECROOMPRIMARYKEY"
 PROJECTS_FILE = Path(__file__).with_name("projects.json")
@@ -81,7 +84,41 @@ def get_data(room_id: int) -> dict:
         raise RuntimeError(f"Network error for room {room_id}: {error.reason}") from error
 
 
-def enrich_project(project: dict) -> dict:
+def extract_room_token(project_key: str, project: dict) -> str:
+    room_token = (project.get("roomToken") or "").strip()
+    if room_token:
+        return room_token
+
+    link = (project.get("link") or "").strip()
+    if link:
+        path_parts = [part for part in urlparse(link).path.split("/") if part]
+        if len(path_parts) >= 2 and path_parts[0].lower() == "room":
+            return path_parts[1]
+
+    fallback = (project.get("title") or project_key or "").strip()
+    return fallback
+
+
+def get_tokens_earned(project_key: str, project: dict) -> int:
+    earnings_token = os.getenv("RECROOMACCESSTOKEN") or os.getenv("RecRoomAccessToken")
+    if not earnings_token:
+        return int((project.get("stats") or {}).get("tokenEarned") or 0)
+
+    room_token = extract_room_token(project_key, project)
+    if not room_token:
+        return int((project.get("stats") or {}).get("tokenEarned") or 0)
+
+    try:
+        return getEarnings(room_token)
+    except RuntimeError as error:
+        print(f"Token stats unavailable for {project_key} ({room_token}): {error}")
+    except ValueError as error:
+        print(f"Token stats invalid for {project_key} ({room_token}): {error}")
+
+    return int((project.get("stats") or {}).get("tokenEarned") or 0)
+
+
+def enrich_project(project_key: str, project: dict) -> dict:
     room_id = project.get("id")
     if room_id is None:
         return project
@@ -96,6 +133,7 @@ def enrich_project(project: dict) -> dict:
             "favoriteCount": 0,
             "visitCount": 0,
             "visitorCount": 0,
+            "tokenEarned": 0,
         }
         return project
 
@@ -108,11 +146,13 @@ def enrich_project(project: dict) -> dict:
     project["description"] = room_data.get("Description") or project.get("description")
     project["imageName"] = image_name
     project["imageUrl"] = f"{IMAGE_BASE_URL}{image_name}" if image_name else ""
+    tokens_earned = get_tokens_earned(project_key, project)
     project["stats"] = {
         "cheerCount": stats.get("CheerCount", 0),
         "favoriteCount": stats.get("FavoriteCount", 0),
         "visitCount": stats.get("VisitCount", 0),
         "visitorCount": stats.get("VisitorCount", 0),
+        "tokenEarned": tokens_earned,
     }
     return project
 
@@ -122,7 +162,7 @@ def update_projects() -> dict:
 
     for key, project in projects.items():
         try:
-            projects[key] = enrich_project(project)
+            projects[key] = enrich_project(key, project)
         except RuntimeError as error:
             print(f"Skipped {key}: {error}")
 

@@ -12,7 +12,8 @@
             "visitCount": 140942,
             "visitorCount": 59937
         },
-        "comingSoon": false
+        "comingSoon": false,
+        "earningsDistribution": 20
     },
     "BreakthroughOpenBeta": {
         "title": "BreakthroughOpenBeta",
@@ -27,7 +28,8 @@
             "visitCount": 119891,
             "visitorCount": 23751
         },
-        "comingSoon": false
+        "comingSoon": false,
+        "earningsDistribution": 0
     },
     "GeonosisLanding": {
         "title": "Geonosis Landing",
@@ -42,7 +44,8 @@
             "visitCount": 0,
             "visitorCount": 0
         },
-        "comingSoon": true
+        "comingSoon": true,
+        "earningsDistribution": 0
     },
     "DarkEcho": {
         "title": "Dark Echo",
@@ -57,6 +60,7 @@
             "visitCount": 0,
             "visitorCount": 0
         },
-        "comingSoon": true
+        "comingSoon": true,
+        "earningsDistribution": 50
     }
 }

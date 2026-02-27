@@ -84,19 +84,38 @@ def get_data(room_id: int) -> dict:
         raise RuntimeError(f"Network error for room {room_id}: {error.reason}") from error
 
 
-def extract_room_token(project_key: str, project: dict) -> str:
-    room_token = (project.get("roomToken") or "").strip()
-    if room_token:
-        return room_token
+def extract_room_token_candidates(project_key: str, project: dict) -> list[str]:
+    candidates: list[str] = []
+
+    explicit_token = (project.get("roomToken") or "").strip()
+    if explicit_token:
+        candidates.append(explicit_token)
+
+    title_token = (project.get("title") or "").strip()
+    if title_token:
+        candidates.append(title_token)
+
+    if project_key:
+        key_token = project_key.strip()
+        if key_token:
+            candidates.append(key_token)
 
     link = (project.get("link") or "").strip()
     if link:
         path_parts = [part for part in urlparse(link).path.split("/") if part]
         if len(path_parts) >= 2 and path_parts[0].lower() == "room":
-            return path_parts[1]
+            candidates.append(path_parts[1])
 
-    fallback = (project.get("title") or project_key or "").strip()
-    return fallback
+    unique_candidates: list[str] = []
+    seen = set()
+    for candidate in candidates:
+        normalized = candidate.casefold()
+        if normalized in seen:
+            continue
+        seen.add(normalized)
+        unique_candidates.append(candidate)
+
+    return unique_candidates
 
 
 def get_tokens_earned(project_key: str, project: dict) -> int:
@@ -104,16 +123,17 @@ def get_tokens_earned(project_key: str, project: dict) -> int:
     if not earnings_token:
         return int((project.get("stats") or {}).get("tokenEarned") or 0)
 
-    room_token = extract_room_token(project_key, project)
-    if not room_token:
+    room_tokens = extract_room_token_candidates(project_key, project)
+    if not room_tokens:
         return int((project.get("stats") or {}).get("tokenEarned") or 0)
 
-    try:
-        return getEarnings(room_token)
-    except RuntimeError as error:
-        print(f"Token stats unavailable for {project_key} ({room_token}): {error}")
-    except ValueError as error:
-        print(f"Token stats invalid for {project_key} ({room_token}): {error}")
+    for room_token in room_tokens:
+        try:
+            return getEarnings(room_token)
+        except RuntimeError as error:
+            print(f"Token stats unavailable for {project_key} ({room_token}): {error}")
+        except ValueError as error:
+            print(f"Token stats invalid for {project_key} ({room_token}): {error}")
 
     return int((project.get("stats") or {}).get("tokenEarned") or 0)
 

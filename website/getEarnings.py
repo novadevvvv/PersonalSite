@@ -47,8 +47,13 @@ def getEarnings(room_token: str) -> int:
     except urllib.error.URLError as error:
         raise RuntimeError(f"Network error for room token {room_token}: {error.reason}") from error
 
+    if not isinstance(metrics, list):
+        raise RuntimeError(f"Unexpected earnings payload for room token {room_token}: {metrics}")
+
     total = 0
     for item in metrics:
+        if not isinstance(item, dict):
+            continue
         room_total = int(item.get("all_time_tokens_earned", 0))
         distribution_percent = _to_percent(item.get("earnings_distribution"))
         my_earned = round(room_total * (distribution_percent / 100))

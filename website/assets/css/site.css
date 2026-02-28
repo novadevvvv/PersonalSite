@@ -38,7 +38,6 @@ section {
 }
 
 .hero {
-	min-height: 92vh;
 	display: grid;
 	align-items: center;
 	position: relative;
@@ -286,6 +285,10 @@ section {
 	word-break: break-word;
 }
 
+body {
+	min-width: 100vh;
+}
+
 footer {
 	margin-top: auto;
 	border-top: 1px solid rgba(255, 255, 255, .12);
@@ -301,8 +304,4 @@ footer {
 .apis-page section {
 	padding-top: 1rem !important;
 	padding-bottom: 1rem !important;
-}
-
-.apis-page footer {
-	margin-top: 0;
 }

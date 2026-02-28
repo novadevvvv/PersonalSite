@@ -65,7 +65,7 @@
         "url": "https://github.com/novadevvvv/RecRoomAuthorisation",
         "endpoints": {
             "https://api.novaa.dev/v1/recauth/": {
-                "method": "POST",
+                "method": "GET",
                 "description": "Get the active session token for the account.",
                 "parameters": {
                     "RN_SESSION_TOKEN": "The active session token for the account.",

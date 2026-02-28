@@ -26,13 +26,13 @@ export function renderProjectCard(project) {
 					<h5 class="card-title">${title}</h5>
 					<p class="card-text text-secondary project-description mb-3">${description}</p>
 					${isComingSoon
-						? `<div class="d-flex flex-wrap gap-2 mt-auto mb-3"><span class="badge text-bg-warning"><i class="bi bi-hourglass-split me-1"></i>Coming Soon</span></div>
+						? `<div class="d-flex flex-wrap gap-2 mt-auto mb-3"><span class="badge text-bg-warning"><i class="fa-solid fa-hourglass-half me-1"></i>Coming Soon</span></div>
 						   <button class="btn btn-outline-secondary btn-sm" type="button" disabled>In Development</button>`
 						: `<div class="d-flex flex-wrap gap-2 mt-auto mb-3 stats-badges">
-							<span class="badge text-bg-primary-subtle"><i class="bi bi-stars me-1"></i><span class="smooth-count" data-target="${cheerCount}">0</span> Cheers</span>
-							<span class="badge text-bg-info-subtle"><i class="bi bi-heart-fill me-1"></i><span class="smooth-count" data-target="${favoriteCount}">0</span> Favorites</span>
-							<span class="badge text-bg-success-subtle"><i class="bi bi-activity me-1"></i><span class="smooth-count" data-target="${visitCount}">0</span> Visits</span>
-							<span class="badge text-bg-secondary"><i class="bi bi-people-fill me-1"></i><span class="smooth-count" data-target="${visitorCount}">0</span> Players</span>
+							<span class="badge text-bg-primary-subtle"><i class="fa-solid fa-star me-1"></i><span class="smooth-count" data-target="${cheerCount}">0</span> Cheers</span>
+							<span class="badge text-bg-info-subtle"><i class="fa-solid fa-heart me-1"></i><span class="smooth-count" data-target="${favoriteCount}">0</span> Favorites</span>
+							<span class="badge text-bg-success-subtle"><i class="fa-solid fa-chart-line me-1"></i><span class="smooth-count" data-target="${visitCount}">0</span> Visits</span>
+							<span class="badge text-bg-secondary"><i class="fa-solid fa-users me-1"></i><span class="smooth-count" data-target="${visitorCount}">0</span> Players</span>
 						 </div>
 						 <div class="d-flex gap-2 mt-auto">
 							${statsLink
@@ -74,13 +74,13 @@ export function renderProjectRow(project) {
 					<h3 class="mb-3">${title}</h3>
 					<p class="text-secondary project-description-full mb-3">${description}</p>
 					${isComingSoon
-						? `<div class="d-flex flex-wrap gap-2 mb-3"><span class="badge text-bg-warning"><i class="bi bi-hourglass-split me-1"></i>Coming Soon</span></div>
+						? `<div class="d-flex flex-wrap gap-2 mb-3"><span class="badge text-bg-warning"><i class="fa-solid fa-hourglass-half me-1"></i>Coming Soon</span></div>
 						   <button class="btn btn-outline-secondary" type="button" disabled>In Development</button>`
 						: `<div class="d-flex flex-wrap gap-2 mb-3 stats-badges">
-							<span class="badge text-bg-primary-subtle"><i class="bi bi-stars me-1"></i><span class="smooth-count" data-target="${cheerCount}">0</span> Cheers</span>
-							<span class="badge text-bg-info-subtle"><i class="bi bi-heart-fill me-1"></i><span class="smooth-count" data-target="${favoriteCount}">0</span> Favorites</span>
-							<span class="badge text-bg-success-subtle"><i class="bi bi-activity me-1"></i><span class="smooth-count" data-target="${visitCount}">0</span> Visits</span>
-							<span class="badge text-bg-secondary"><i class="bi bi-people-fill me-1"></i><span class="smooth-count" data-target="${visitorCount}">0</span> Players</span>
+							<span class="badge text-bg-primary-subtle"><i class="fa-solid fa-star me-1"></i><span class="smooth-count" data-target="${cheerCount}">0</span> Cheers</span>
+							<span class="badge text-bg-info-subtle"><i class="fa-solid fa-heart me-1"></i><span class="smooth-count" data-target="${favoriteCount}">0</span> Favorites</span>
+							<span class="badge text-bg-success-subtle"><i class="fa-solid fa-chart-line me-1"></i><span class="smooth-count" data-target="${visitCount}">0</span> Visits</span>
+							<span class="badge text-bg-secondary"><i class="fa-solid fa-users me-1"></i><span class="smooth-count" data-target="${visitorCount}">0</span> Players</span>
 						 </div>
 						 <div class="d-flex gap-2 flex-wrap">
 							${statsLink

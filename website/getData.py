@@ -199,7 +199,7 @@ def write_project_stats_pages(projects: dict) -> None:
     <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
     <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">
     <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH\" crossorigin=\"anonymous\">
-    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css\" rel=\"stylesheet\">
+    <link href=\"https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css\" rel=\"stylesheet\">
     <link href=\"../../../assets/css/site.css\" rel=\"stylesheet\">
 </head>
 <body>
@@ -207,8 +207,8 @@ def write_project_stats_pages(projects: dict) -> None:
         <div class=\"container py-2\">
             <a class=\"navbar-brand fw-bold\" href=\"/home/\">Nova</a>
             <div class=\"ms-auto d-flex gap-2\">
-                <a href=\"/projects.html\" class=\"btn btn-outline-light btn-sm\"><i class=\"bi bi-grid-1x2 me-2\"></i>All Projects</a>
-                <a href=\"/home/\" class=\"btn btn-outline-light btn-sm\"><i class=\"bi bi-arrow-left me-2\"></i>Home</a>
+                <a href=\"/projects.html\" class=\"btn btn-outline-light btn-sm\"><i class=\"fa-solid fa-table-cells-large me-2\"></i>All Projects</a>
+                <a href=\"/home/\" class=\"btn btn-outline-light btn-sm\"><i class=\"fa-solid fa-arrow-left me-2\"></i>Home</a>
             </div>
         </div>
     </nav>

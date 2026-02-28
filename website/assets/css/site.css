@@ -207,6 +207,24 @@ section {
 	width: 100%;
 }
 
+.api-endpoint-link {
+	display: flex;
+	align-items: center;
+	gap: .55rem;
+	text-decoration: none;
+	color: inherit;
+}
+
+.api-endpoint-link:hover .api-route {
+	color: #b7f0ff;
+}
+
+.api-open-indicator {
+	margin-left: auto;
+	font-size: .8rem;
+	color: #b7c9e6;
+}
+
 .api-endpoint-summary {
 	display: flex;
 	align-items: center;
@@ -244,6 +262,12 @@ section {
 	max-height: 230px;
 	overflow: auto;
 	white-space: pre;
+}
+
+.apis-page #endpointSubtitle {
+	display: flex;
+	align-items: center;
+	gap: .55rem;
 }
 
 .api-method {

@@ -1,8 +1,6 @@
 import { renderProjectCard } from "./components.js";
 import { loadProjectsBundle } from "./projects-data.js";
 import { animateNumber } from "./utils.js";
-import { renderApiCard } from "./components.js";
-import { loadApisData } from "./api-data.js";
 
 const projectsGrid = document.getElementById("projectsGrid");
 const projectsCount = document.getElementById("projectsCount");
@@ -10,7 +8,6 @@ const totalVisits = document.getElementById("totalVisits");
 const totalFavorites = document.getElementById("totalFavorites");
 const totalCheers = document.getElementById("totalCheers");
 const totalVisitors = document.getElementById("totalVisitors");
-const apiGrid = document.getElementById("apiGrid");
 
 let lastSignature = "";
 let refreshInFlight = false;
@@ -73,34 +70,6 @@ function renderProjects(projects) {
 	animateMetric(totalVisitors, totals.visitorCount, 1000);
 }
 
-function renderApis() {
-	if (!apiGrid) {
-		return;
-	}
-
-	apiGrid.innerHTML = '<div class="col-12"><div class="alert alert-secondary mb-0">Loading API examples…</div></div>';
-}
-
-async function refreshApis() {
-	if (!apiGrid) {
-		return;
-	}
-
-	try {
-		const apis = await loadApisData();
-
-		if (!apis.length) {
-			apiGrid.innerHTML = '<div class="col-12"><div class="alert alert-secondary mb-0">No API examples configured yet.</div></div>';
-			return;
-		}
-
-		apiGrid.innerHTML = apis.map(renderApiCard).join("");
-	} catch (error) {
-		apiGrid.innerHTML = '<div class="col-12"><div class="alert alert-secondary mb-0">No API examples configured yet.</div></div>';
-		console.error(error);
-	}
-}
-
 async function refreshProjects() {
 	if (refreshInFlight) {
 		return;
@@ -129,6 +98,4 @@ async function refreshProjects() {
 }
 
 refreshProjects();
-renderApis();
-refreshApis();
 setInterval(refreshProjects, 30000);

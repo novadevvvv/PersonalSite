@@ -46,7 +46,7 @@ function normalizeApiMap(rawMap) {
 }
 
 export async function loadApisData() {
-	const response = await fetch(`api.json?t=${Date.now()}`, { cache: "no-store" });
+	const response = await fetch(`/api.json?t=${Date.now()}`, { cache: "no-store" });
 	if (!response.ok) {
 		throw new Error(`Failed to load api.json (${response.status})`);
 	}

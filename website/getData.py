@@ -2,7 +2,7 @@ import json
 import os
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from html import escape
 from pathlib import Path
 
@@ -37,6 +37,47 @@ def update_daily_visit_history(project: dict, visit_count: int) -> list[dict]:
 
     normalized.append({"date": today, "visitCount": int(visit_count)})
     return normalized
+
+
+def build_daily_visit_series(points: list[dict], fallback_value: int) -> tuple[list[str], list[int]]:
+    parsed_points: list[tuple[datetime, int]] = []
+    for item in points:
+        date_value = str(item.get("date", "")).strip()
+        try:
+            point_date = datetime.fromisoformat(date_value)
+        except ValueError:
+            continue
+        parsed_points.append((point_date, int(item.get("visitCount", 0))))
+
+    if not parsed_points:
+        today = datetime.now(timezone.utc).date().isoformat()
+        return [today], [int(fallback_value)]
+
+    parsed_points.sort(key=lambda item: item[0])
+    values_by_day: dict[str, int] = {}
+    for point_date, visit_count in parsed_points:
+        values_by_day[point_date.date().isoformat()] = visit_count
+
+    start_day = parsed_points[0][0].date()
+    end_day = parsed_points[-1][0].date()
+
+    labels: list[str] = []
+    values: list[int] = []
+
+    cursor_day = start_day
+    cursor_key = cursor_day.isoformat()
+    last_known_value = values_by_day.get(cursor_key, int(fallback_value))
+
+    while cursor_day <= end_day:
+        cursor_key = cursor_day.isoformat()
+        if cursor_key in values_by_day:
+            last_known_value = values_by_day[cursor_key]
+
+        labels.append(cursor_key)
+        values.append(last_known_value)
+        cursor_day += timedelta(days=1)
+
+    return labels, values
 
 
 def get_data(room_id: int) -> dict:
@@ -175,8 +216,7 @@ def write_project_stats_pages(projects: dict) -> None:
         if not points:
             points = [{"date": "Today", "visitCount": int(stats.get("visitCount", 0))}]
 
-        labels = [point["date"] for point in points]
-        values = [point["visitCount"] for point in points]
+        labels, values = build_daily_visit_series(points, int(stats.get("visitCount", 0)))
         first_value = values[0] if values else 0
         last_value = values[-1] if values else 0
         total_growth = max(0, last_value - first_value)
@@ -260,7 +300,7 @@ def write_project_stats_pages(projects: dict) -> None:
                 plugins: {{ legend: {{ display: false }} }},
                 scales: {{
                     x: {{
-                        ticks: {{ color: "rgba(233, 237, 245, 0.7)" }},
+                        ticks: {{ color: "rgba(233, 237, 245, 0.7)", autoSkip: false, maxRotation: 0, minRotation: 0 }},
                         grid: {{ color: "rgba(255,255,255,0.08)" }},
                     }},
                     y: {{

@@ -1,16 +1,16 @@
 {
     "DBS-Breakthrough": {
         "title": "DBS-Breakthrough",
-        "description": "< SHATTER THE LIMIT >\\n\\nFight it out as your favorite characters in ^DBS-Breakthrough, a DB Super themed fighting game with an expansive roster of Characters, built with care around, and for, immersive and highly explosive battles entirely available in VR! ",
+        "description": "< SHATTER THE LIMIT >\\n\\nFight it out as your favorite characters in ^DBS-Breakthrough, a DB Super themed fighting game with an expansive roster of Characters, built with care around, and for, immersive and highly explosive battles entirely available in VR!",
         "link": "https://www.rec.net/room/dbs-breakthrough",
         "id": 8947998229867728285,
         "imageName": "6qvk1h5ikurn8pbam0ouyfqv1.jpg",
         "imageUrl": "https://img.rec.net/6qvk1h5ikurn8pbam0ouyfqv1.jpg",
         "stats": {
-            "cheerCount": 5303,
-            "favoriteCount": 4489,
-            "visitCount": 144228,
-            "visitorCount": 61772
+            "cheerCount": 6047,
+            "favoriteCount": 5065,
+            "visitCount": 164246,
+            "visitorCount": 72673
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -18,6 +18,10 @@
             {
                 "date": "2026-02-27",
                 "visitCount": 144228
+            },
+            {
+                "date": "2026-03-03",
+                "visitCount": 164246
             }
         ]
     },
@@ -29,10 +33,10 @@
         "imageName": "2y7s4ma4qz4gifewm4hm9q5x6.jpg",
         "imageUrl": "https://img.rec.net/2y7s4ma4qz4gifewm4hm9q5x6.jpg",
         "stats": {
-            "cheerCount": 2269,
-            "favoriteCount": 2823,
-            "visitCount": 119913,
-            "visitorCount": 23764
+            "cheerCount": 2270,
+            "favoriteCount": 2821,
+            "visitCount": 120035,
+            "visitorCount": 23833
         },
         "comingSoon": false,
         "statsPath": "/project/7069854669103207958/stats",
@@ -40,6 +44,10 @@
             {
                 "date": "2026-02-27",
                 "visitCount": 119913
+            },
+            {
+                "date": "2026-03-03",
+                "visitCount": 120035
             }
         ]
     },

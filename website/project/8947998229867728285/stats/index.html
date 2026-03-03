@@ -17,7 +17,6 @@
         <div class="container py-2">
             <a class="navbar-brand fw-bold" href="/home/">Nova</a>
             <div class="ms-auto d-flex gap-2">
-                <a href="/tip/" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-heart me-2"></i>Tip Me</a>
                 <a href="/projects.html" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-table-cells-large me-2"></i>All Projects</a>
                 <a href="/home/" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-arrow-left me-2"></i>Home</a>
             </div>
@@ -28,16 +27,16 @@
         <div class="container py-2">
             <div class="glass-card">
                 <h1 class="fw-bold mb-2">DBS-Breakthrough</h1>
-                <p class="text-secondary mb-4">&lt; SHATTER THE LIMIT &gt;<br><br>Fight it out as your favorite characters in ^DBS-Breakthrough, a DB Super themed fighting game with an expansive roster of Characters, built with care around, and for, immersive and highly explosive battles entirely available in VR! </p>
+                <p class="text-secondary mb-4">&lt; SHATTER THE LIMIT &gt;<br><br>Fight it out as your favorite characters in ^DBS-Breakthrough, a DB Super themed fighting game with an expansive roster of Characters, built with care around, and for, immersive and highly explosive battles entirely available in VR!</p>
                 <div class="row g-3">
-                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">144,228</p><small class="text-secondary">Visits</small></div></div>
-                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">61,772</p><small class="text-secondary">Unique Players</small></div></div>
-                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">4,489</p><small class="text-secondary">Favorites</small></div></div>
-                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">5,303</p><small class="text-secondary">Cheers</small></div></div>
+                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">164,246</p><small class="text-secondary">Visits</small></div></div>
+                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">72,673</p><small class="text-secondary">Unique Players</small></div></div>
+                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">5,065</p><small class="text-secondary">Favorites</small></div></div>
+                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">6,047</p><small class="text-secondary">Cheers</small></div></div>
                 </div>
                 <div class="row g-3 mt-2 mb-4">
-                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">0</p><small class="text-secondary">Total Growth</small></div></div>
-                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">0</p><small class="text-secondary">Avg Daily Growth</small></div></div>
+                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">20,018</p><small class="text-secondary">Total Growth</small></div></div>
+                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">5,004</p><small class="text-secondary">Avg Daily Growth</small></div></div>
                 </div>
                 <div style="position:relative;min-height:320px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.1);border-radius:.9rem;padding:.75rem;">
                     <canvas id="visitsChart" height="120"></canvas>
@@ -47,8 +46,8 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script>
-        const labels = ["2026-02-27"];
-        const data = [144228];
+        const labels = ["2026-02-27", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03"];
+        const data = [144228, 144228, 144228, 144228, 164246];
 
         new window.Chart(document.getElementById("visitsChart"), {
             type: "line",
@@ -71,7 +70,7 @@
                 plugins: { legend: { display: false } },
                 scales: {
                     x: {
-                        ticks: { color: "rgba(233, 237, 245, 0.7)" },
+                        ticks: { color: "rgba(233, 237, 245, 0.7)", autoSkip: false, maxRotation: 0, minRotation: 0 },
                         grid: { color: "rgba(255,255,255,0.08)" },
                     },
                     y: {

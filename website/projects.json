@@ -4,13 +4,13 @@
         "description": "< SHATTER THE LIMIT >\\n\\nFight it out as your favorite characters in ^DBS-Breakthrough, a DB Super themed fighting game with an expansive roster of Characters, built with care around, and for, immersive and highly explosive battles entirely available in VR!",
         "link": "https://www.rec.net/room/dbs-breakthrough",
         "id": 8947998229867728285,
-        "imageName": "6qvk1h5ikurn8pbam0ouyfqv1.jpg",
-        "imageUrl": "https://img.rec.net/6qvk1h5ikurn8pbam0ouyfqv1.jpg",
+        "imageName": "a7th5kglbumbwyakdmls0mrfz.jpg",
+        "imageUrl": "https://img.rec.net/a7th5kglbumbwyakdmls0mrfz.jpg",
         "stats": {
-            "cheerCount": 6047,
-            "favoriteCount": 5065,
-            "visitCount": 164246,
-            "visitorCount": 72673
+            "cheerCount": 6700,
+            "favoriteCount": 5586,
+            "visitCount": 182663,
+            "visitorCount": 81099
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -18,6 +18,10 @@
             {
                 "date": "2026-03-03",
                 "visitCount": 164246
+            },
+            {
+                "date": "2026-03-08",
+                "visitCount": 182663
             }
         ]
     },
@@ -29,10 +33,10 @@
         "imageName": "2y7s4ma4qz4gifewm4hm9q5x6.jpg",
         "imageUrl": "https://img.rec.net/2y7s4ma4qz4gifewm4hm9q5x6.jpg",
         "stats": {
-            "cheerCount": 2270,
-            "favoriteCount": 2821,
-            "visitCount": 120035,
-            "visitorCount": 23833
+            "cheerCount": 2271,
+            "favoriteCount": 2822,
+            "visitCount": 120154,
+            "visitorCount": 23887
         },
         "comingSoon": false,
         "statsPath": "/project/7069854669103207958/stats",
@@ -40,6 +44,10 @@
             {
                 "date": "2026-03-03",
                 "visitCount": 120035
+            },
+            {
+                "date": "2026-03-08",
+                "visitCount": 120154
             }
         ]
     },

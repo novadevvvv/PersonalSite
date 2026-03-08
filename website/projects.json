@@ -7,10 +7,10 @@
         "imageName": "a7th5kglbumbwyakdmls0mrfz.jpg",
         "imageUrl": "https://img.rec.net/a7th5kglbumbwyakdmls0mrfz.jpg",
         "stats": {
-            "cheerCount": 6783,
-            "favoriteCount": 5664,
-            "visitCount": 184886,
-            "visitorCount": 82090
+            "cheerCount": 6790,
+            "favoriteCount": 5668,
+            "visitCount": 184978,
+            "visitorCount": 82126
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -21,7 +21,7 @@
             },
             {
                 "date": "2026-03-08",
-                "visitCount": 184886
+                "visitCount": 184978
             }
         ]
     },

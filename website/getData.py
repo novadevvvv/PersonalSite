@@ -359,6 +359,7 @@ def write_project_stats_pages(projects: dict) -> None:
             </div>
         </div>
     </main>
+    <script src="/assets/js/availability-banner.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script>
         const labels = {json.dumps(labels)};

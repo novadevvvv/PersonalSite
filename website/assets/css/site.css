@@ -37,6 +37,32 @@ section {
 	border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
 
+body.availability-banner-visible {
+	padding-top: 3.2rem;
+}
+
+.availability-banner {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 2000;
+	padding: .55rem .9rem;
+	font-size: .9rem;
+	font-weight: 600;
+	letter-spacing: .01em;
+	text-align: center;
+	color: #fff7f7;
+	background: linear-gradient(90deg, rgba(153, 27, 27, .96), rgba(185, 28, 28, .96));
+	border-bottom: 1px solid rgba(255, 255, 255, .22);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, .32);
+}
+
+.availability-banner-time {
+	font-weight: 400;
+	opacity: .9;
+}
+
 .hero {
 	display: grid;
 	align-items: center;

@@ -348,7 +348,7 @@ def write_project_stats_pages(projects: dict) -> None:
                     <label for="metricSelector" class="visually-hidden">Chart metric</label>
                     <select id="metricSelector" class="form-select form-select-sm" style="max-width: 220px; background: rgba(15, 23, 42, 0.75); border-color: rgba(34, 211, 238, 0.35); color: rgba(233, 237, 245, 0.95);">
                         <option value="visits" selected>Visits</option>
-                        <option value="growth">Growth</option>
+                        <option value="growth">Daily Growth</option>
                         <option value="favorites">Favorites</option>
                         <option value="cheers">Cheers</option>
                     </select>
@@ -370,7 +370,7 @@ def write_project_stats_pages(projects: dict) -> None:
 
         const metricConfig = {{
             visits: {{ label: "Visits", color: "rgba(34, 211, 238, 0.95)", fill: "rgba(34, 211, 238, 0.18)", data: visitsData }},
-            growth: {{ label: "Growth", color: "rgba(45, 212, 191, 0.95)", fill: "rgba(45, 212, 191, 0.18)", data: growthData }},
+            growth: {{ label: "Daily Growth", color: "rgba(45, 212, 191, 0.95)", fill: "rgba(45, 212, 191, 0.18)", data: growthData }},
             favorites: {{ label: "Favorites", color: "rgba(250, 204, 21, 0.95)", fill: "rgba(250, 204, 21, 0.18)", data: favoritesData }},
             cheers: {{ label: "Cheers", color: "rgba(248, 113, 113, 0.95)", fill: "rgba(248, 113, 113, 0.18)", data: cheersData }},
         }};

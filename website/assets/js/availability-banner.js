@@ -1,7 +1,7 @@
 (function () {
 	const TIME_ZONE = "Australia/Adelaide";
 	const BANNER_ID = "availabilityBanner";
-	const STORAGE_KEY = "availabilityBannerDisabled";
+	const STORAGE_KEY = "availabilityBannerOverride";
 	const CHECK_INTERVAL_MS = 60_000;
 	const BANNER_HTML =
 		"I'm unavailable right now (Adelaide time). " +
@@ -44,20 +44,26 @@
 		return minutes >= 6 * 60 && minutes < 22 * 60;
 	}
 
-	function isBannerDisabled() {
-		return window.localStorage.getItem(STORAGE_KEY) === "1";
+	function getBannerOverride() {
+		const mode = window.localStorage.getItem(STORAGE_KEY);
+		return mode === "show" || mode === "hide" ? mode : null;
 	}
 
-	function setBannerDisabled(disabled) {
-		if (disabled) {
-			window.localStorage.setItem(STORAGE_KEY, "1");
+	function setBannerOverride(mode) {
+		if (mode === "show" || mode === "hide") {
+			window.localStorage.setItem(STORAGE_KEY, mode);
 		} else {
 			window.localStorage.removeItem(STORAGE_KEY);
 		}
 	}
 
+	function isBannerVisible() {
+		return Boolean(document.getElementById(BANNER_ID));
+	}
+
 	function upsertBanner() {
-		const shouldShowBanner = !isAvailableNow() && !isBannerDisabled();
+		const override = getBannerOverride();
+		const shouldShowBanner = override === "show" || (override !== "hide" && !isAvailableNow());
 		let banner = document.getElementById(BANNER_ID);
 		const navbar = document.querySelector("nav.navbar");
 
@@ -90,15 +96,20 @@
 		}
 
 		window.availabilityBannerControls = {
-			isDisabled: isBannerDisabled,
-			setDisabled: (disabled) => {
-				setBannerDisabled(Boolean(disabled));
+			isVisible: isBannerVisible,
+			getOverride: getBannerOverride,
+			setOverride: (mode) => {
+				setBannerOverride(mode);
 				upsertBanner();
 			},
-			toggle: () => {
-				setBannerDisabled(!isBannerDisabled());
+			toggleVisibility: () => {
+				setBannerOverride(isBannerVisible() ? "hide" : "show");
 				upsertBanner();
-				return isBannerDisabled();
+				return isBannerVisible();
+			},
+			clearOverride: () => {
+				setBannerOverride(null);
+				upsertBanner();
 			},
 		};
 

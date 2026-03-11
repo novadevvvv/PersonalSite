@@ -59,12 +59,12 @@
 	function upsertBanner() {
 		const shouldShowBanner = !isAvailableNow() && !isBannerDisabled();
 		let banner = document.getElementById(BANNER_ID);
+		const navbar = document.querySelector("nav.navbar");
 
 		if (!shouldShowBanner) {
 			if (banner) {
 				banner.remove();
 			}
-			document.body.classList.remove("availability-banner-visible");
 			return;
 		}
 
@@ -75,10 +75,13 @@
 			banner.setAttribute("role", "status");
 			banner.setAttribute("aria-live", "polite");
 			banner.innerHTML = BANNER_HTML;
-			document.body.prepend(banner);
 		}
 
-		document.body.classList.add("availability-banner-visible");
+		if (navbar) {
+			navbar.insertAdjacentElement("afterend", banner);
+		} else {
+			document.body.prepend(banner);
+		}
 	}
 
 	function initializeAvailabilityBanner() {

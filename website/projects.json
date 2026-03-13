@@ -4,13 +4,13 @@
         "description": "< SHATTER THE LIMIT >\\n\\nFight it out as your favorite characters in ^DBS-Breakthrough, a DB Super themed fighting game with an expansive roster of Characters, built with care around, and for, immersive and highly explosive battles entirely available in VR!",
         "link": "https://www.rec.net/room/dbs-breakthrough",
         "id": 8947998229867728285,
-        "imageName": "9ugm0ekz42et013al6pblmbuj.jpg",
-        "imageUrl": "https://img.rec.net/9ugm0ekz42et013al6pblmbuj.jpg",
+        "imageName": "682gzl52dnisvinc8mgfosal2.jpg",
+        "imageUrl": "https://img.rec.net/682gzl52dnisvinc8mgfosal2.jpg",
         "stats": {
-            "cheerCount": 7246,
-            "favoriteCount": 6019,
-            "visitCount": 198130,
-            "visitorCount": 87459
+            "cheerCount": 7248,
+            "favoriteCount": 6021,
+            "visitCount": 198266,
+            "visitorCount": 87499
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -29,7 +29,7 @@
             },
             {
                 "date": "2026-03-13",
-                "visitCount": 198130
+                "visitCount": 198266
             }
         ],
         "favoriteHistory": [
@@ -47,7 +47,7 @@
             },
             {
                 "date": "2026-03-13",
-                "favoriteCount": 6019
+                "favoriteCount": 6021
             }
         ],
         "cheerHistory": [
@@ -65,7 +65,7 @@
             },
             {
                 "date": "2026-03-13",
-                "cheerCount": 7246
+                "cheerCount": 7248
             }
         ]
     },
@@ -79,8 +79,8 @@
         "stats": {
             "cheerCount": 2271,
             "favoriteCount": 2823,
-            "visitCount": 120217,
-            "visitorCount": 23925
+            "visitCount": 120226,
+            "visitorCount": 23931
         },
         "comingSoon": false,
         "statsPath": "/project/7069854669103207958/stats",
@@ -99,7 +99,7 @@
             },
             {
                 "date": "2026-03-13",
-                "visitCount": 120217
+                "visitCount": 120226
             }
         ],
         "favoriteHistory": [

@@ -7,10 +7,10 @@
         "imageName": "682gzl52dnisvinc8mgfosal2.jpg",
         "imageUrl": "https://img.rec.net/682gzl52dnisvinc8mgfosal2.jpg",
         "stats": {
-            "cheerCount": 7738,
-            "favoriteCount": 6381,
-            "visitCount": 213746,
-            "visitorCount": 94237
+            "cheerCount": 7757,
+            "favoriteCount": 6395,
+            "visitCount": 214439,
+            "visitorCount": 94521
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -41,7 +41,7 @@
             },
             {
                 "date": "2026-03-16",
-                "visitCount": 213746
+                "visitCount": 214439
             }
         ],
         "favoriteHistory": [
@@ -71,7 +71,7 @@
             },
             {
                 "date": "2026-03-16",
-                "favoriteCount": 6381
+                "favoriteCount": 6395
             }
         ],
         "cheerHistory": [
@@ -101,7 +101,7 @@
             },
             {
                 "date": "2026-03-16",
-                "cheerCount": 7738
+                "cheerCount": 7757
             }
         ]
     },
@@ -113,10 +113,10 @@
         "imageName": "2y7s4ma4qz4gifewm4hm9q5x6.jpg",
         "imageUrl": "https://img.rec.net/2y7s4ma4qz4gifewm4hm9q5x6.jpg",
         "stats": {
-            "cheerCount": 2272,
+            "cheerCount": 2273,
             "favoriteCount": 2824,
-            "visitCount": 120341,
-            "visitorCount": 23990
+            "visitCount": 120346,
+            "visitorCount": 23994
         },
         "comingSoon": false,
         "statsPath": "/project/7069854669103207958/stats",
@@ -147,7 +147,7 @@
             },
             {
                 "date": "2026-03-16",
-                "visitCount": 120341
+                "visitCount": 120346
             }
         ],
         "favoriteHistory": [
@@ -207,7 +207,7 @@
             },
             {
                 "date": "2026-03-16",
-                "cheerCount": 2272
+                "cheerCount": 2273
             }
         ]
     },

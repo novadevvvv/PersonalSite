@@ -7,10 +7,10 @@
         "imageName": "682gzl52dnisvinc8mgfosal2.jpg",
         "imageUrl": "https://img.rec.net/682gzl52dnisvinc8mgfosal2.jpg",
         "stats": {
-            "cheerCount": 7906,
-            "favoriteCount": 6506,
-            "visitCount": 219449,
-            "visitorCount": 96912
+            "cheerCount": 7910,
+            "favoriteCount": 6510,
+            "visitCount": 219592,
+            "visitorCount": 96987
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -45,7 +45,7 @@
             },
             {
                 "date": "2026-03-17",
-                "visitCount": 219449
+                "visitCount": 219592
             }
         ],
         "favoriteHistory": [
@@ -79,7 +79,7 @@
             },
             {
                 "date": "2026-03-17",
-                "favoriteCount": 6506
+                "favoriteCount": 6510
             }
         ],
         "cheerHistory": [
@@ -113,7 +113,7 @@
             },
             {
                 "date": "2026-03-17",
-                "cheerCount": 7906
+                "cheerCount": 7910
             }
         ]
     },

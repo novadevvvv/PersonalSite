@@ -7,10 +7,10 @@
         "imageName": "682gzl52dnisvinc8mgfosal2.jpg",
         "imageUrl": "https://img.rec.net/682gzl52dnisvinc8mgfosal2.jpg",
         "stats": {
-            "cheerCount": 8250,
-            "favoriteCount": 6742,
-            "visitCount": 230964,
-            "visitorCount": 101562
+            "cheerCount": 8264,
+            "favoriteCount": 6748,
+            "visitCount": 231406,
+            "visitorCount": 101713
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -58,6 +58,10 @@
             {
                 "date": "2026-03-20",
                 "visitCount": 230964
+            },
+            {
+                "date": "2026-03-21",
+                "visitCount": 231406
             }
         ],
         "favoriteHistory": [
@@ -104,6 +108,10 @@
             {
                 "date": "2026-03-20",
                 "favoriteCount": 6742
+            },
+            {
+                "date": "2026-03-21",
+                "favoriteCount": 6748
             }
         ],
         "cheerHistory": [
@@ -150,6 +158,10 @@
             {
                 "date": "2026-03-20",
                 "cheerCount": 8250
+            },
+            {
+                "date": "2026-03-21",
+                "cheerCount": 8264
             }
         ]
     },
@@ -163,8 +175,8 @@
         "stats": {
             "cheerCount": 2273,
             "favoriteCount": 2823,
-            "visitCount": 120426,
-            "visitorCount": 24012
+            "visitCount": 120429,
+            "visitorCount": 24013
         },
         "comingSoon": false,
         "statsPath": "/project/7069854669103207958/stats",
@@ -212,6 +224,10 @@
             {
                 "date": "2026-03-20",
                 "visitCount": 120426
+            },
+            {
+                "date": "2026-03-21",
+                "visitCount": 120429
             }
         ],
         "favoriteHistory": [
@@ -258,6 +274,10 @@
             {
                 "date": "2026-03-20",
                 "favoriteCount": 2823
+            },
+            {
+                "date": "2026-03-21",
+                "favoriteCount": 2823
             }
         ],
         "cheerHistory": [
@@ -303,6 +323,10 @@
             },
             {
                 "date": "2026-03-20",
+                "cheerCount": 2273
+            },
+            {
+                "date": "2026-03-21",
                 "cheerCount": 2273
             }
         ]

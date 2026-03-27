@@ -7,10 +7,10 @@
         "imageName": "3d746mvj53783jpmq9n9989z3.jpg",
         "imageUrl": "https://img.rec.net/3d746mvj53783jpmq9n9989z3.jpg",
         "stats": {
-            "cheerCount": 8869,
-            "favoriteCount": 7191,
-            "visitCount": 253441,
-            "visitorCount": 109882
+            "cheerCount": 8872,
+            "favoriteCount": 7193,
+            "visitCount": 253522,
+            "visitorCount": 109909
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -85,7 +85,7 @@
             },
             {
                 "date": "2026-03-27",
-                "visitCount": 253441
+                "visitCount": 253522
             }
         ],
         "favoriteHistory": [
@@ -159,7 +159,7 @@
             },
             {
                 "date": "2026-03-27",
-                "favoriteCount": 7191
+                "favoriteCount": 7193
             }
         ],
         "cheerHistory": [
@@ -233,7 +233,7 @@
             },
             {
                 "date": "2026-03-27",
-                "cheerCount": 8869
+                "cheerCount": 8872
             }
         ]
     },
@@ -247,8 +247,8 @@
         "stats": {
             "cheerCount": 2274,
             "favoriteCount": 2825,
-            "visitCount": 120498,
-            "visitorCount": 24032
+            "visitCount": 120499,
+            "visitorCount": 24033
         },
         "comingSoon": false,
         "statsPath": "/project/7069854669103207958/stats",
@@ -323,7 +323,7 @@
             },
             {
                 "date": "2026-03-27",
-                "visitCount": 120498
+                "visitCount": 120499
             }
         ],
         "favoriteHistory": [

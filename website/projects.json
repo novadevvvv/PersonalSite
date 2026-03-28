@@ -4,13 +4,13 @@
         "description": "< SHATTER THE LIMIT >\n\nFight it out as your favorite characters in ^DBS-Breakthrough, a DB Super themed fighting game with an expansive roster of Characters, built with care around, and for, immersive and highly explosive battles entirely available in VR!",
         "link": "https://www.rec.net/room/dbs-breakthrough",
         "id": 8947998229867728285,
-        "imageName": "3d746mvj53783jpmq9n9989z3.jpg",
-        "imageUrl": "https://img.rec.net/3d746mvj53783jpmq9n9989z3.jpg",
+        "imageName": "2eni269xnh6u3pj9ikxqf3lso.jpg",
+        "imageUrl": "https://img.rec.net/2eni269xnh6u3pj9ikxqf3lso.jpg",
         "stats": {
-            "cheerCount": 8897,
-            "favoriteCount": 7213,
-            "visitCount": 254477,
-            "visitorCount": 110200
+            "cheerCount": 8906,
+            "favoriteCount": 7220,
+            "visitCount": 254552,
+            "visitorCount": 110231
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -89,7 +89,7 @@
             },
             {
                 "date": "2026-03-28",
-                "visitCount": 254477
+                "visitCount": 254552
             }
         ],
         "favoriteHistory": [
@@ -167,7 +167,7 @@
             },
             {
                 "date": "2026-03-28",
-                "favoriteCount": 7213
+                "favoriteCount": 7220
             }
         ],
         "cheerHistory": [
@@ -245,7 +245,7 @@
             },
             {
                 "date": "2026-03-28",
-                "cheerCount": 8897
+                "cheerCount": 8906
             }
         ]
     },

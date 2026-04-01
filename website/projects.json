@@ -4,13 +4,13 @@
         "description": "< SHATTER THE LIMIT >\n\nFight it out as your favorite characters in ^DBS-Breakthrough, a DB Super themed fighting game with an expansive roster of Characters, built with care around, and for, immersive and highly explosive battles entirely available in VR!",
         "link": "https://www.rec.net/room/dbs-breakthrough",
         "id": 8947998229867728285,
-        "imageName": "ew4vzkiyt1kw77t15oa1bkiu5.jpg",
-        "imageUrl": "https://img.rec.net/ew4vzkiyt1kw77t15oa1bkiu5.jpg",
+        "imageName": "6sitiofq6re9a103dwhuxnwbi.jpg",
+        "imageUrl": "https://img.rec.net/6sitiofq6re9a103dwhuxnwbi.jpg",
         "stats": {
-            "cheerCount": 9199,
-            "favoriteCount": 7433,
-            "visitCount": 266578,
-            "visitorCount": 113907
+            "cheerCount": 9204,
+            "favoriteCount": 7438,
+            "visitCount": 266831,
+            "visitorCount": 113981
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -102,6 +102,10 @@
             {
                 "date": "2026-03-31",
                 "visitCount": 266578
+            },
+            {
+                "date": "2026-04-01",
+                "visitCount": 266831
             }
         ],
         "favoriteHistory": [
@@ -192,6 +196,10 @@
             {
                 "date": "2026-03-31",
                 "favoriteCount": 7433
+            },
+            {
+                "date": "2026-04-01",
+                "favoriteCount": 7438
             }
         ],
         "cheerHistory": [
@@ -282,6 +290,10 @@
             {
                 "date": "2026-03-31",
                 "cheerCount": 9199
+            },
+            {
+                "date": "2026-04-01",
+                "cheerCount": 9204
             }
         ]
     },
@@ -295,8 +307,8 @@
         "stats": {
             "cheerCount": 2273,
             "favoriteCount": 2824,
-            "visitCount": 120538,
-            "visitorCount": 24043
+            "visitCount": 120543,
+            "visitorCount": 24044
         },
         "comingSoon": false,
         "statsPath": "/project/7069854669103207958/stats",
@@ -388,6 +400,10 @@
             {
                 "date": "2026-03-31",
                 "visitCount": 120538
+            },
+            {
+                "date": "2026-04-01",
+                "visitCount": 120543
             }
         ],
         "favoriteHistory": [
@@ -478,6 +494,10 @@
             {
                 "date": "2026-03-31",
                 "favoriteCount": 2824
+            },
+            {
+                "date": "2026-04-01",
+                "favoriteCount": 2824
             }
         ],
         "cheerHistory": [
@@ -567,6 +587,10 @@
             },
             {
                 "date": "2026-03-31",
+                "cheerCount": 2273
+            },
+            {
+                "date": "2026-04-01",
                 "cheerCount": 2273
             }
         ]

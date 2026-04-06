@@ -9,9 +9,6 @@ const totalFavorites = document.getElementById("totalFavorites");
 const totalCheers = document.getElementById("totalCheers");
 const totalVisitors = document.getElementById("totalVisitors");
 
-let lastSignature = "";
-let refreshInFlight = false;
-
 function animateMetric(element, value, duration = 900) {
 	if (!element) {
 		return;
@@ -27,10 +24,6 @@ function animateVisibleCounts(scope = document) {
 	});
 }
 
-function buildSignature(projects) {
-	return JSON.stringify(projects);
-}
-
 function renderProjects(projects) {
 	if (!projects.length) {
 		projectsGrid.innerHTML = '<div class="col-12"><div class="alert alert-secondary mb-0">No projects found in projects.json.</div></div>';
@@ -42,12 +35,14 @@ function renderProjects(projects) {
 		return;
 	}
 
-	projectsGrid.innerHTML = projects.map(renderProjectCard).join("");
+	const featuredProjects = projects.filter((project) => project.featured === true);
+	const standardProjects = projects.filter((project) => project.featured !== true);
+	projectsGrid.innerHTML = [...featuredProjects, ...standardProjects].map(renderProjectCard).join("");
 	animateVisibleCounts(projectsGrid);
 	animateMetric(projectsCount, projects.length, 900);
 
 	const totals = projects.reduce((acc, project) => {
-		if (project.comingSoon === true || Number(project.id) === -1) {
+		if (!project.archived) {
 			return acc;
 		}
 
@@ -70,21 +65,10 @@ function renderProjects(projects) {
 	animateMetric(totalVisitors, totals.visitorCount, 1000);
 }
 
-async function refreshProjects() {
-	if (refreshInFlight) {
-		return;
-	}
-
-	refreshInFlight = true;
-
+async function initializeProjects() {
 	try {
 		const { projects } = await loadProjectsBundle();
-		const signature = buildSignature(projects);
-
-		if (signature !== lastSignature) {
-			lastSignature = signature;
-			renderProjects(projects);
-		}
+		renderProjects(projects);
 	} catch (error) {
 		if (error?.name === "AbortError") {
 			return;
@@ -92,10 +76,7 @@ async function refreshProjects() {
 
 		projectsGrid.innerHTML = '<div class="col-12"><div class="alert alert-danger mb-0">Could not load projects data.</div></div>';
 		console.error(error);
-	} finally {
-		refreshInFlight = false;
 	}
 }
 
-refreshProjects();
-setInterval(refreshProjects, 30000);
+initializeProjects();

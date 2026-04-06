@@ -1,5 +1,5 @@
 import { loadApisData } from "./api-data.js";
-import { escapeHtml } from "./utils.js";
+import { buildExternalRedirectUrl, escapeHtml } from "./utils.js";
 
 const apiGrid = document.getElementById("apiGrid");
 
@@ -53,8 +53,8 @@ function renderApiCard(api) {
 	const repoHtml = repositories.length
 		? repositories.map((repo) => {
 			const repoName = escapeHtml(repo.name || "Repository");
-			const repoUrl = escapeHtml(repo.url || "#");
-			return `<a href="${repoUrl}" class="badge text-bg-secondary text-decoration-none" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github me-1"></i>${repoName}</a>`;
+			const repoUrl = escapeHtml(buildExternalRedirectUrl(repo.url || "#"));
+			return `<a href="${repoUrl}" class="badge text-bg-secondary text-decoration-none" target="_self" rel="noopener noreferrer"><i class="fa-brands fa-github me-1"></i>${repoName}</a>`;
 		}).join(" ")
 		: '<span class="badge text-bg-secondary">No repo linked</span>';
 
@@ -100,4 +100,3 @@ async function loadApis() {
 }
 
 loadApis();
-setInterval(loadApis, 30000);

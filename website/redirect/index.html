@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<base href="../">
+	<title>Redirecting...</title>
+	<link href="assets/css/site.css" rel="stylesheet">
+	<script>
+		window.redirectTarget = new URLSearchParams(window.location.search).get("url");
+	</script>
+</head>
+<body>
+	<main class="py-5">
+		<div class="container py-4">
+			<div class="glass-card">
+				<h1 class="h4 mb-3">Redirecting...</h1>
+				<p class="text-secondary mb-0" id="redirectMessage">Preparing external link.</p>
+			</div>
+		</div>
+	</main>
+	<script>
+		const target = window.redirectTarget;
+		const message = document.getElementById("redirectMessage");
+
+		if (message) {
+			message.textContent = target
+				? `Taking you to ${target}`
+				: "No destination was provided.";
+		}
+
+		if (target) {
+			window.location.replace(target);
+		}
+	</script>
+</body>
+</html>

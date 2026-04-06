@@ -21,9 +21,19 @@ export function formatDescription(value) {
 	return escapeHtml(normalized).replace(/\r?\n/g, "<br>");
 }
 
+export function buildExternalRedirectUrl(value) {
+	const normalized = String(value ?? "").trim();
+	if (!normalized) {
+		return "#";
+	}
+
+	return `redirect/?url=${encodeURIComponent(normalized)}`;
+}
+
 export function animateNumber(element, target, duration = 700) {
 	const parsedTarget = Number(target) || 0;
 	const current = Number(element.dataset.current ?? "0") || 0;
+	const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 	const mode = element.dataset.format || "full";
 	const formatValue = (value) => {
 		if (mode === "compact") {
@@ -36,6 +46,12 @@ export function animateNumber(element, target, duration = 700) {
 
 		return numberFormat.format(value);
 	};
+
+	if (prefersReducedMotion) {
+		element.textContent = formatValue(parsedTarget);
+		element.dataset.current = String(parsedTarget);
+		return;
+	}
 
 	if (current === parsedTarget) {
 		element.textContent = formatValue(parsedTarget);

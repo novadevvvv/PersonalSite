@@ -4,25 +4,26 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Redirecting…</title>
-	<link rel="canonical" href="/home/">
-	<link href="/assets/css/site.css" rel="stylesheet">
+	<link rel="canonical" href="home/">
+	<link href="assets/css/site.css" rel="stylesheet">
 	<script>
-		const redirectTarget = `/home/${window.location.search}${window.location.hash}`;
+		const redirectTarget = `home/${window.location.search}${window.location.hash}`;
 		window.location.replace(redirectTarget);
 	</script>
 	<noscript>
-		<meta http-equiv="refresh" content="0; url=/home/">
+		<meta http-equiv="refresh" content="0; url=home/">
 	</noscript>
 </head>
 <body>
-	<p>Redirecting to <a id="homeRedirectLink" href="/home/">/home/</a>…</p>
+	<p>Redirecting to <a id="homeRedirectLink" href="home/">home/</a>…</p>
 	<script>
 		const link = document.getElementById("homeRedirectLink");
 		if (link) {
-			link.href = `/home/${window.location.search}${window.location.hash}`;
+			link.href = `home/${window.location.search}${window.location.hash}`;
 			link.textContent = link.href;
 		}
 	</script>
-	<script src="/assets/js/availability-banner.js"></script>
+	<script src="assets/js/availability-banner.js"></script>
+	<script src="assets/js/galaxy-effects.js"></script>
 </body>
 </html>

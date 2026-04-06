@@ -52,7 +52,7 @@ export async function loadApisData() {
 
 	for (const candidate of candidates) {
 		try {
-			const response = await fetch(`${candidate}?t=${Date.now()}`, { cache: "no-store" });
+			const response = await fetch(candidate, { cache: "default" });
 			if (!response.ok) {
 				lastError = new Error(`Failed to load ${candidate} (${response.status})`);
 				continue;

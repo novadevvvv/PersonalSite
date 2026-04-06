@@ -3,8 +3,6 @@ import { loadProjectsData } from "./projects-data.js";
 import { animateNumber } from "./utils.js";
 
 const projectsList = document.getElementById("projectsList");
-let lastSignature = "";
-let refreshInFlight = false;
 
 function animateVisibleCounts(scope = document) {
 	const elements = scope.querySelectorAll(".smooth-count[data-target]");
@@ -13,35 +11,21 @@ function animateVisibleCounts(scope = document) {
 	});
 }
 
-function buildSignature(projects) {
-	return JSON.stringify(projects);
-}
-
 function renderProjects(projects) {
 	if (!projects.length) {
 		projectsList.innerHTML = '<div class="alert alert-secondary mb-0">No projects found in projects.json.</div>';
 		return;
 	}
 
-	projectsList.innerHTML = projects.map(renderProjectRow).join("");
+	const orderedProjects = [...projects].sort((left, right) => Number(right.featured === true) - Number(left.featured === true));
+	projectsList.innerHTML = orderedProjects.map(renderProjectRow).join("");
 	animateVisibleCounts(projectsList);
 }
 
-async function refreshProjects() {
-	if (refreshInFlight) {
-		return;
-	}
-
-	refreshInFlight = true;
-
+async function initializeProjects() {
 	try {
 		const projects = await loadProjectsData();
-		const signature = buildSignature(projects);
-
-		if (signature !== lastSignature) {
-			lastSignature = signature;
-			renderProjects(projects);
-		}
+		renderProjects(projects);
 	} catch (error) {
 		if (error?.name === "AbortError") {
 			return;
@@ -49,10 +33,7 @@ async function refreshProjects() {
 
 		projectsList.innerHTML = '<div class="alert alert-danger mb-0">Could not load projects data.</div>';
 		console.error(error);
-	} finally {
-		refreshInFlight = false;
 	}
 }
 
-refreshProjects();
-setInterval(refreshProjects, 30000);
+initializeProjects();

@@ -9,8 +9,8 @@
         "stats": {
             "cheerCount": 9665,
             "favoriteCount": 7754,
-            "visitCount": 281893,
-            "visitorCount": 120999
+            "visitCount": 281902,
+            "visitorCount": 121000
         },
         "comingSoon": false,
         "statsPath": "/project/8947998229867728285/stats",
@@ -125,7 +125,7 @@
             },
             {
                 "date": "2026-04-06",
-                "visitCount": 281893
+                "visitCount": 281902
             }
         ],
         "favoriteHistory": [

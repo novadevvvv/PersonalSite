@@ -638,6 +638,7 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 18px;
+  flex-wrap: wrap;
 }
 
 .score-pill {
@@ -656,11 +657,16 @@ button:disabled {
 .certainty-block {
   display: grid;
   gap: 6px;
+  min-width: 110px;
 }
 
 .certainty-block strong {
   font-size: 1.4rem;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+}
+
+.certainty-block .summary-label {
+  white-space: nowrap;
 }
 
 .summary-grid {
@@ -692,6 +698,13 @@ button:disabled {
 .catalog-family,
 .catalog-confidence {
   overflow-wrap: anywhere;
+}
+
+.score-cluster .summary-label,
+.score-cluster strong,
+.score-pill {
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .severity {

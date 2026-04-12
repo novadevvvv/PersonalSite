@@ -47,7 +47,8 @@ const sourceDialogWebhooks = document.querySelector('#source-dialog-webhooks');
 const sourceDialogWebhookList = document.querySelector('#source-dialog-webhook-list');
 
 const runtimeConfig = window.SKIDCHECKER_CONFIG || {};
-const apiBaseUrl = normalizeApiBaseUrl(runtimeConfig.apiBaseUrl || '');
+let apiBaseUrl = normalizeApiBaseUrl(runtimeConfig.apiBaseUrl || '');
+const githubPersistenceConfig = normalizeGithubPersistenceConfig(runtimeConfig.githubPersistence || {});
 const initialRouteState = getRouteState(window.location.pathname);
 const siteRootPath = initialRouteState.siteRootPath;
 
@@ -138,6 +139,10 @@ function bindEvents() {
 }
 
 async function boot() {
+  if (!apiBaseUrl && isLocalHost(window.location.hostname)) {
+    apiBaseUrl = await detectLocalApiBaseUrl();
+  }
+
   if (!apiBaseUrl) {
     fernflowerStatus.textContent = 'Browser mode';
     renderCatalog(getBrowserCatalog());
@@ -193,6 +198,7 @@ async function loadSavedScan(scanId) {
 }
 
 async function runBrowserModeAnalysis(file) {
+  const completedSteps = buildCompletedBrowserSteps();
   const placeholderJob = {
     fileName: file.name,
     status: 'running',
@@ -220,22 +226,86 @@ async function runBrowserModeAnalysis(file) {
     deobfuscatedArchiveName: result.deobfuscatedArchiveName || null
   };
 
+  let persistedJob = null;
+  if (shouldPersistBrowserScanToGitHub()) {
+    button.textContent = 'Publishing report...';
+    setProgressShell({
+      label: 'Publishing',
+      progress: 98,
+      stage: 'Queueing GitHub persistence',
+      detail: 'Submitting the completed scan to the repository so GitHub Actions can publish a shareable report.'
+    });
+
+    try {
+      persistedJob = await queueBrowserScanForGithubPersistence({
+        fileName: file.name,
+        result,
+        steps: completedSteps
+      });
+    } catch (error) {
+      renderJob({
+        fileName: file.name,
+        status: 'complete',
+        progress: 100,
+        currentStep: 'Analysis complete',
+        steps: completedSteps,
+        result
+      });
+      setProgressShell({
+        label: 'Complete',
+        progress: 100,
+        stage: 'Analysis complete',
+        detail: `Analysis completed, but GitHub persistence failed: ${error.message}`
+      });
+      button.disabled = false;
+      button.textContent = 'Start analysis';
+      return;
+    }
+  }
+
   renderJob({
     fileName: file.name,
     status: 'complete',
     progress: 100,
     currentStep: 'Analysis complete',
-    steps: [
-      { id: 'load', label: 'Load archive', confidence: 100, status: 'done', detail: 'Completed.' },
-      { id: 'enumerate', label: 'Enumerate files', confidence: 94, status: 'done', detail: 'Completed.' },
-      { id: 'checks', label: 'Run browser checks', confidence: 78, status: 'done', detail: 'Completed.' },
-      { id: 'score', label: 'Score verdict', confidence: 76, status: 'done', detail: 'Completed.' }
-    ],
-    result
+    steps: completedSteps,
+    result,
+    savedScanId: persistedJob?.savedScanId || null
   });
 
   button.disabled = false;
   button.textContent = 'Start analysis';
+
+  if (persistedJob?.savedScanId) {
+    setProgressShell({
+      label: 'Publishing',
+      progress: 100,
+      stage: 'Waiting for GitHub Pages',
+      detail: `Queued scan ${persistedJob.savedScanId} for GitHub Actions publishing. Waiting for the shareable page to go live.`
+    });
+
+    const published = await waitForPublishedScan(persistedJob.savedScanId);
+    if (published) {
+      window.location.assign(buildSavedScanPath(persistedJob.savedScanId));
+      return;
+    }
+
+    setProgressShell({
+      label: 'Published Pending',
+      progress: 100,
+      stage: 'Waiting for GitHub Pages',
+      detail: `The scan was queued for GitHub Actions as ${persistedJob.savedScanId}. The Pages deploy has not finished yet; open the saved scan link in a minute.`
+    });
+  }
+}
+
+function buildCompletedBrowserSteps() {
+  return [
+    { id: 'load', label: 'Load archive', confidence: 100, status: 'done', detail: 'Completed.' },
+    { id: 'enumerate', label: 'Enumerate files', confidence: 94, status: 'done', detail: 'Completed.' },
+    { id: 'checks', label: 'Run browser checks', confidence: 78, status: 'done', detail: 'Completed.' },
+    { id: 'score', label: 'Score verdict', confidence: 76, status: 'done', detail: 'Completed.' }
+  ];
 }
 
 function startPolling(jobId) {
@@ -749,6 +819,164 @@ function normalizeApiBaseUrl(value) {
   }
 
   return value.endsWith('/') ? value.slice(0, -1) : value;
+}
+
+async function detectLocalApiBaseUrl() {
+  const candidate = normalizeApiBaseUrl(runtimeConfig.localApiBaseUrl || 'http://localhost:3000');
+
+  try {
+    const response = await fetch(`${candidate}/api/health`, {
+      cache: 'no-store'
+    });
+
+    return response.ok ? candidate : '';
+  } catch {
+    return '';
+  }
+}
+
+function normalizeGithubPersistenceConfig(value) {
+  return {
+    enabled: Boolean(value?.enabled),
+    owner: String(value?.owner || '').trim(),
+    repo: String(value?.repo || '').trim(),
+    branch: String(value?.branch || 'main').trim() || 'main',
+    token: String(value?.token || '').trim(),
+    incomingRoot: String(value?.incomingRoot || 'website/data/skidcheckers/_incoming').trim() || 'website/data/skidcheckers/_incoming'
+  };
+}
+
+function shouldPersistBrowserScanToGitHub() {
+  if (!githubPersistenceConfig.enabled) {
+    return false;
+  }
+
+  if (!githubPersistenceConfig.owner || !githubPersistenceConfig.repo || !githubPersistenceConfig.token) {
+    return false;
+  }
+
+  return !isLocalHost(window.location.hostname);
+}
+
+function isLocalHost(hostname) {
+  const normalized = String(hostname || '').toLowerCase();
+  return normalized === 'localhost'
+    || normalized === '127.0.0.1'
+    || normalized === '::1'
+    || normalized.endsWith('.local');
+}
+
+async function queueBrowserScanForGithubPersistence({ fileName, result, steps }) {
+  const savedScanId = self.crypto?.randomUUID?.();
+  if (!savedScanId) {
+    throw new Error('Browser UUID generation is unavailable.');
+  }
+
+  const persistedJob = buildPersistedBrowserJob({
+    savedScanId,
+    fileName,
+    result,
+    steps
+  });
+  const requestPath = `${githubPersistenceConfig.incomingRoot}/${savedScanId}.json`;
+  const response = await fetch(buildGithubContentsUrl(requestPath), {
+    method: 'PUT',
+    headers: buildGithubApiHeaders(),
+    body: JSON.stringify({
+      message: `Queue SkidChecker scan ${savedScanId}`,
+      branch: githubPersistenceConfig.branch,
+      content: encodeUtf8Base64(JSON.stringify(persistedJob, null, 2))
+    })
+  });
+
+  if (!response.ok) {
+    const message = await readGithubErrorMessage(response);
+    throw new Error(message);
+  }
+
+  return persistedJob;
+}
+
+function buildPersistedBrowserJob({ savedScanId, fileName, result, steps }) {
+  return {
+    id: savedScanId,
+    fileName,
+    status: 'complete',
+    progress: 100,
+    currentStep: 'Analysis complete',
+    createdAt: Date.now(),
+    savedAt: Date.now(),
+    steps,
+    result,
+    savedScanId,
+    error: null
+  };
+}
+
+function buildGithubContentsUrl(repoPath) {
+  const encodedPath = repoPath
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+  return `https://api.github.com/repos/${encodeURIComponent(githubPersistenceConfig.owner)}/${encodeURIComponent(githubPersistenceConfig.repo)}/contents/${encodedPath}`;
+}
+
+function buildGithubApiHeaders() {
+  return {
+    Accept: 'application/vnd.github+json',
+    Authorization: `Bearer ${githubPersistenceConfig.token}`,
+    'Content-Type': 'application/json'
+  };
+}
+
+function encodeUtf8Base64(value) {
+  const bytes = new TextEncoder().encode(value);
+  let binary = '';
+  const chunkSize = 0x8000;
+
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    const chunk = bytes.subarray(index, index + chunkSize);
+    binary += String.fromCharCode(...chunk);
+  }
+
+  return btoa(binary);
+}
+
+async function readGithubErrorMessage(response) {
+  try {
+    const payload = await response.json();
+    return payload?.message || `GitHub API request failed with ${response.status}.`;
+  } catch {
+    return `GitHub API request failed with ${response.status}.`;
+  }
+}
+
+async function waitForPublishedScan(savedScanId) {
+  const deadline = Date.now() + 180000;
+  const targetUrl = buildSavedScanDataPath(savedScanId);
+
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(targetUrl, {
+        cache: 'no-store'
+      });
+      if (response.ok) {
+        return true;
+      }
+    } catch {
+      // Keep polling until timeout.
+    }
+
+    await delay(5000);
+  }
+
+  return false;
+}
+
+function delay(milliseconds) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, milliseconds);
+  });
 }
 
 function getRouteState(pathname) {

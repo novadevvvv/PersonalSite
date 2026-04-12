@@ -26,6 +26,9 @@ const filesValue = document.querySelector('#files-value');
 const checksValue = document.querySelector('#checks-value');
 const resultDownloadRegular = document.querySelector('#result-download-regular');
 const resultDownloadDeobfuscated = document.querySelector('#result-download-deobfuscated');
+const resultShareLink = document.querySelector('#result-share-link');
+const resultUrlPanel = document.querySelector('#result-url-panel');
+const resultUrlList = document.querySelector('#result-url-list');
 
 const detectionsContainer = document.querySelector('#detections');
 const checksGrid = document.querySelector('#checks-grid');
@@ -45,12 +48,16 @@ const sourceDialogWebhookList = document.querySelector('#source-dialog-webhook-l
 
 const runtimeConfig = window.SKIDCHECKER_CONFIG || {};
 const apiBaseUrl = normalizeApiBaseUrl(runtimeConfig.apiBaseUrl || '');
+const initialRouteState = getRouteState(window.location.pathname);
+const siteRootPath = initialRouteState.siteRootPath;
 
 let activeJobId = null;
 let pollTimer = null;
 let activeSourceDetection = null;
 let currentUploadedFile = null;
 let activeDownloadBundle = null;
+let activeSavedScanId = initialRouteState.savedScanId;
+let activeShareUrl = activeSavedScanId ? buildSavedScanPath(activeSavedScanId) : '';
 
 boot();
 bindEvents();
@@ -85,7 +92,10 @@ function bindEvents() {
     clearPolling();
     currentUploadedFile = input.files[0];
     activeDownloadBundle = null;
+    activeSavedScanId = null;
+    activeShareUrl = '';
     syncDownloadActions({ regularEnabled: false, deobfuscatedEnabled: false });
+    syncShareLink();
 
     const formData = new FormData();
     formData.append('modJar', input.files[0]);
@@ -131,25 +141,54 @@ async function boot() {
   if (!apiBaseUrl) {
     fernflowerStatus.textContent = 'Browser mode';
     renderCatalog(getBrowserCatalog());
-    return;
+  } else {
+    try {
+      const [healthResponse, catalogResponse] = await Promise.all([
+        apiFetch('/api/health'),
+        apiFetch('/api/catalog')
+      ]);
+      const healthPayload = await healthResponse.json();
+      const catalogPayload = await catalogResponse.json();
+
+      fernflowerStatus.textContent = healthPayload.fernflowerReady ? 'Ready' : 'Missing jar';
+      renderCatalog(catalogPayload.checks || []);
+    } catch {
+      fernflowerStatus.textContent = apiBaseUrl ? 'API unavailable' : 'API not configured';
+      catalogGrid.className = 'catalog-grid empty-state';
+      catalogGrid.textContent = apiBaseUrl
+        ? 'The check catalog is currently unavailable.'
+        : 'Set window.SKIDCHECKER_CONFIG.apiBaseUrl in config.js to connect this GitHub Pages frontend to a hosted API.';
+    }
   }
 
-  try {
-    const [healthResponse, catalogResponse] = await Promise.all([
-      apiFetch('/api/health'),
-      apiFetch('/api/catalog')
-    ]);
-    const healthPayload = await healthResponse.json();
-    const catalogPayload = await catalogResponse.json();
+  if (initialRouteState.savedScanId) {
+    await loadSavedScan(initialRouteState.savedScanId);
+  }
+}
 
-    fernflowerStatus.textContent = healthPayload.fernflowerReady ? 'Ready' : 'Missing jar';
-    renderCatalog(catalogPayload.checks || []);
-  } catch {
-    fernflowerStatus.textContent = apiBaseUrl ? 'API unavailable' : 'API not configured';
-    catalogGrid.className = 'catalog-grid empty-state';
-    catalogGrid.textContent = apiBaseUrl
-      ? 'The check catalog is currently unavailable.'
-      : 'Set window.SKIDCHECKER_CONFIG.apiBaseUrl in config.js to connect this GitHub Pages frontend to a hosted API.';
+async function loadSavedScan(scanId) {
+  setProgressShell({
+    label: 'Loading',
+    progress: 100,
+    stage: 'Loading saved scan',
+    detail: `Retrieving persisted report ${scanId}.`
+  });
+
+  try {
+    const response = await fetch(buildSavedScanDataPath(scanId), {
+      cache: 'no-store'
+    });
+    const payload = await response.json();
+
+    if (!response.ok) {
+      throw new Error(payload.error || 'Saved scan could not be loaded.');
+    }
+
+    activeSavedScanId = payload.savedScanId || payload.id || scanId;
+    activeShareUrl = buildSavedScanPath(activeSavedScanId);
+    renderJob(payload);
+  } catch (error) {
+    showErrorState(`Saved scan ${scanId}`, error.message || 'Saved scan could not be loaded.');
   }
 }
 
@@ -215,6 +254,12 @@ function startPolling(jobId) {
         clearPolling();
         button.disabled = false;
         button.textContent = 'Start analysis';
+
+        const nextShareUrl = payload.savedScanId ? buildSavedScanPath(payload.savedScanId) : '';
+        if (payload.status === 'complete' && nextShareUrl && getRouteState(window.location.pathname).savedScanId !== payload.savedScanId) {
+          window.location.assign(nextShareUrl);
+          return;
+        }
       }
     } catch (error) {
       clearPolling();
@@ -233,6 +278,10 @@ function clearPolling() {
 }
 
 function renderJob(job) {
+  activeSavedScanId = job.savedScanId || activeSavedScanId || null;
+  activeShareUrl = activeSavedScanId ? buildSavedScanPath(activeSavedScanId) : '';
+  syncShareLink();
+
   setProgressShell({
     label: job.status,
     progress: job.progress,
@@ -297,6 +346,8 @@ function renderSteps(steps) {
 function renderPendingResult(fileName, status, currentStep) {
   closeSourceViewer();
   syncDownloadActions({ regularEnabled: false, deobfuscatedEnabled: false });
+  syncShareLink();
+  renderResultUrls([]);
   resultStatus.textContent = humanize(status);
   resultTitle.textContent = fileName || 'Awaiting result';
   resultSummary.textContent = currentStep || 'Analysis has started, but no verdict is available yet.';
@@ -318,6 +369,7 @@ function renderResult(result) {
     regularEnabled: Boolean(currentUploadedFile),
     deobfuscatedEnabled: Boolean(result?.deobfuscatedArchiveBlob || activeDownloadBundle?.deobfuscatedArchiveBlob)
   });
+  syncShareLink();
   resultStatus.textContent = humanize(result.verdict);
   resultTitle.textContent = result.fileName;
   resultSummary.textContent = buildSummary(result);
@@ -328,6 +380,7 @@ function renderResult(result) {
   filesValue.textContent = String(result.sourceFileCount ?? '-');
   checksValue.textContent = `${result.matchedCheckCount ?? 0}/${result.checks?.length ?? 0}`;
 
+  renderResultUrls(result.urls || []);
   renderDetections(result.detections || []);
   renderChecks(result.checks || []);
 }
@@ -365,8 +418,9 @@ function renderDetections(detections) {
 
     const webhookPanel = node.querySelector('.webhook-panel');
     const webhookList = node.querySelector('.webhook-list');
-    if (detection.webhooks?.length) {
-      renderWebhookList(webhookList, detection.webhooks);
+    const detectionUrls = detection.urls?.length ? detection.urls : detection.webhooks || [];
+    if (detectionUrls.length) {
+      renderUrlList(webhookList, detectionUrls);
       webhookPanel.hidden = false;
     } else {
       webhookPanel.remove();
@@ -415,6 +469,8 @@ function renderChecks(checks) {
 function showErrorState(fileName, message) {
   closeSourceViewer();
   syncDownloadActions({ regularEnabled: false, deobfuscatedEnabled: false });
+  activeShareUrl = '';
+  syncShareLink();
   setProgressShell({
     label: 'Failed',
     progress: 100,
@@ -431,6 +487,7 @@ function showErrorState(fileName, message) {
   familyValue.textContent = '-';
   filesValue.textContent = '-';
   checksValue.textContent = '-';
+  renderResultUrls([]);
   detectionsContainer.className = 'detections empty-state';
   detectionsContainer.textContent = 'The analysis failed before detections could be generated.';
   checksGrid.className = 'checks-grid empty-state';
@@ -457,7 +514,7 @@ function openSourceViewer(detection) {
   activeSourceDetection = detection;
   sourceDialogTitle.textContent = detection.file || 'Source file';
   sourceDialogMeta.textContent = formatSourceLocation(detection);
-  renderSourceDialogWebhooks(detection.webhooks || []);
+  renderSourceDialogWebhooks(detection.urls?.length ? detection.urls : detection.webhooks || []);
   renderHighlightedSource(sourceDialogCode, detection.fullSource, detection.matchIndex, detection.matchLength);
 
   if (!sourceDialog.open) {
@@ -533,23 +590,52 @@ function renderSourceDialogWebhooks(webhooks) {
     return;
   }
 
-  renderWebhookList(sourceDialogWebhookList, webhooks);
+  renderUrlList(sourceDialogWebhookList, webhooks);
   sourceDialogWebhooks.hidden = false;
 }
 
-function renderWebhookList(container, webhooks) {
+function renderResultUrls(urlEntries) {
+  if (!resultUrlPanel || !resultUrlList) {
+    return;
+  }
+
+  resultUrlList.replaceChildren();
+
+  if (!urlEntries.length) {
+    resultUrlPanel.hidden = true;
+    return;
+  }
+
+  renderUrlList(resultUrlList, urlEntries);
+  resultUrlPanel.hidden = false;
+}
+
+function renderUrlList(container, urls) {
   container.replaceChildren();
 
-  for (const webhook of webhooks) {
+  for (const urlEntry of urls) {
     const item = document.createElement('li');
     item.className = 'webhook-item';
 
     const code = document.createElement('code');
-    code.textContent = webhook;
+    code.textContent = formatUrlEntry(urlEntry);
     item.append(code);
 
     container.append(item);
   }
+}
+
+function formatUrlEntry(urlEntry) {
+  if (typeof urlEntry === 'string') {
+    return urlEntry;
+  }
+
+  if (urlEntry?.file && urlEntry?.url) {
+    const suffix = urlEntry.service ? ` (${urlEntry.service}${urlEntry.matchedDomain ? ` via ${urlEntry.matchedDomain}` : ''})` : '';
+    return `${urlEntry.file}: ${urlEntry.url}${suffix}`;
+  }
+
+  return urlEntry?.url || '';
 }
 
 function downloadWholeMod(mode) {
@@ -592,6 +678,22 @@ function syncDownloadActions({ regularEnabled, deobfuscatedEnabled }) {
   if (resultDownloadDeobfuscated) {
     resultDownloadDeobfuscated.disabled = !deobfuscatedEnabled;
   }
+}
+
+function syncShareLink() {
+  if (!resultShareLink) {
+    return;
+  }
+
+  if (!activeShareUrl || !activeSavedScanId) {
+    resultShareLink.hidden = true;
+    resultShareLink.removeAttribute('href');
+    return;
+  }
+
+  resultShareLink.hidden = false;
+  resultShareLink.href = activeShareUrl;
+  resultShareLink.textContent = `Saved scan ${activeSavedScanId}`;
 }
 
 function buildSummary(result) {
@@ -647,6 +749,42 @@ function normalizeApiBaseUrl(value) {
   }
 
   return value.endsWith('/') ? value.slice(0, -1) : value;
+}
+
+function getRouteState(pathname) {
+  const segments = pathname.split('/').filter(Boolean);
+  const skidcheckerIndex = segments.lastIndexOf('skidchecker');
+
+  if (skidcheckerIndex === -1) {
+    return {
+      siteRootPath: '',
+      savedScanId: null
+    };
+  }
+
+  const siteRootSegments = segments.slice(0, skidcheckerIndex);
+  const tailSegments = segments
+    .slice(skidcheckerIndex + 1)
+    .filter((segment) => segment.toLowerCase() !== 'index.html');
+  const candidateId = tailSegments[0] || null;
+
+  return {
+    siteRootPath: siteRootSegments.length ? `/${siteRootSegments.join('/')}` : '',
+    savedScanId: /^[0-9a-f-]{36}$/i.test(candidateId || '') ? candidateId.toLowerCase() : null
+  };
+}
+
+function buildSitePath(relativePath) {
+  const normalizedPath = relativePath.replace(/^\/+/, '');
+  return `${siteRootPath}/${normalizedPath}`.replace(/\/+/g, '/');
+}
+
+function buildSavedScanPath(scanId) {
+  return buildSitePath(`skidchecker/${encodeURIComponent(scanId)}/`);
+}
+
+function buildSavedScanDataPath(scanId) {
+  return buildSitePath(`data/skidcheckers/${encodeURIComponent(scanId)}/scan.dat`);
 }
 
 function renderCatalog(checks) {

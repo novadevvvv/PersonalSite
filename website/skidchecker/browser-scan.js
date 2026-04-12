@@ -7,6 +7,12 @@ const exactWeedhackPayload = [
   '","minecraftInfo":"46c19a54-e52d-42c1-9c7f-eda984c69042"'
 ];
 
+const urlPattern = /https?:\/\/[^\s"'`<>\\)\]}]+/gi;
+const maliciousDomainFeedUrl = window.SKIDCHECKER_CONFIG?.maliciousDomainFeedUrl || 'https://synchole.net/api/baddomains';
+
+let cachedMaliciousHostIndex = null;
+let cachedMaliciousHostIndexExpiresAt = 0;
+
 const signatures = [
   {
     id: 'weedhack-payload',
@@ -199,6 +205,7 @@ export function getBrowserCatalog() {
 }
 
 export async function analyzeJarInBrowser(file, onProgress) {
+  const maliciousHostIndex = await getMaliciousHostIndex();
   const steps = createSteps();
   markStep(steps, 'load', 'active', 'Reading the uploaded archive in the browser.');
   onProgress?.({ progress: 8, currentStep: 'Loading archive', steps });
@@ -239,7 +246,7 @@ export async function analyzeJarInBrowser(file, onProgress) {
   markStep(steps, 'checks', 'active', 'Evaluating browser-mode detection rules.');
   onProgress?.({ progress: 72, currentStep: 'Running detection checks', steps });
 
-  const result = scanExtractedContent(extractedFiles);
+  const result = scanExtractedContent(extractedFiles, maliciousHostIndex);
 
   markStep(steps, 'checks', 'done', `${result.matchedCheckCount} checks matched out of ${result.checks.length}.`);
   markStep(steps, 'score', 'active', 'Calculating formal verdict and certainty score.');
@@ -332,15 +339,17 @@ function decodeBinaryStrings(bytes) {
   return output;
 }
 
-function scanExtractedContent(files) {
+function scanExtractedContent(files, maliciousHostIndex = new Map()) {
   const detections = [];
   const checks = [];
+  const urlEntries = collectMaliciousUrlEntries(files, maliciousHostIndex);
 
   for (const signature of signatures) {
     const match = files.find((file) => signature.test(file.content));
     const location = match ? locateMatch(match.content, signature.id) : null;
     const deobfuscatedSource = match ? deobfuscateSource(match.content) : null;
-    const webhooks = deobfuscatedSource ? extractDiscordWebhooks(deobfuscatedSource) : [];
+    const urls = deobfuscatedSource ? extractMaliciousUrls(deobfuscatedSource, maliciousHostIndex) : [];
+    const webhooks = urls.filter(isDiscordWebhookUrl);
 
     checks.push({
       id: signature.id,
@@ -351,7 +360,8 @@ function scanExtractedContent(files) {
       rationale: signature.rationale,
       matched: Boolean(match),
       file: match?.relativePath ?? null,
-      evidence: match ? buildSnippet(match.content, signature.id) : null
+      evidence: match ? buildSnippet(match.content, signature.id) : null,
+      urls
     });
 
     if (!match) {
@@ -370,6 +380,7 @@ function scanExtractedContent(files) {
       snippet: buildSnippet(match.content, signature.id, location),
       fullSource: match.content,
       deobfuscatedSource,
+      urls,
       webhooks,
       matchIndex: location?.index ?? 0,
       matchLength: location?.length ?? 0,
@@ -393,6 +404,7 @@ function scanExtractedContent(files) {
     verdict: score >= 90 ? 'malicious' : score >= 50 ? 'suspicious' : score > 0 ? 'review-recommended' : 'low-risk',
     primaryFamily: distinctFamilies[0] ?? null,
     matchedCheckCount: detections.length,
+    urls: urlEntries,
     detections,
     checks
   };
@@ -511,12 +523,12 @@ function deobfuscateSource(content) {
 }
 
 function extractDiscordWebhooks(content) {
-  const matches = content.match(/https?:\/\/(?:canary\.|ptb\.)?discord(?:app)?\.com\/api\/webhooks\/\d+\/[A-Za-z0-9._-]+/gi) || [];
-  return [...new Set(matches)];
+  return extractInterestingUrls(content).filter(isDiscordWebhookUrl);
 }
 
 async function buildDeobfuscatedArchive(originalFileName, files, detections) {
   const archive = new JSZip();
+  const urlEntries = [];
   const webhookEntries = [];
 
   for (const file of files) {
@@ -524,7 +536,12 @@ async function buildDeobfuscatedArchive(originalFileName, files, detections) {
     const exportPath = buildDeobfuscatedExportPath(file.relativePath, file.kind);
     archive.file(exportPath, deobfuscatedContent);
 
-    const fileWebhooks = extractDiscordWebhooks(deobfuscatedContent);
+    const fileUrls = extractMaliciousUrlEntries(deobfuscatedContent, cachedMaliciousHostIndex || new Map());
+    for (const entry of fileUrls) {
+      urlEntries.push(`${file.relativePath}: ${entry.url}`);
+    }
+
+    const fileWebhooks = fileUrls.map((entry) => entry.url).filter(isDiscordWebhookUrl);
     for (const webhook of fileWebhooks) {
       webhookEntries.push(`${file.relativePath}: ${webhook}`);
     }
@@ -541,12 +558,18 @@ async function buildDeobfuscatedArchive(originalFileName, files, detections) {
       file: detection.file,
       lineNumber: detection.lineNumber,
       columnNumber: detection.columnNumber,
+      urls: detection.urls || [],
       webhooks: detection.webhooks || []
     })),
+    urls: [...new Set(urlEntries)],
     webhooks: [...new Set(webhookEntries)]
   };
 
   archive.file('_skidchecker/report.json', JSON.stringify(report, null, 2));
+
+  if (report.urls.length) {
+    archive.file('_skidchecker/urls.txt', `${report.urls.join('\n')}\n`);
+  }
 
   if (report.webhooks.length) {
     archive.file('_skidchecker/webhooks.txt', `${report.webhooks.join('\n')}\n`);
@@ -570,4 +593,162 @@ function sanitizeArchiveBaseName(fileName) {
   return String(fileName || 'mod')
     .replace(/\.jar$/i, '')
     .replace(/[^a-zA-Z0-9._-]/g, '_');
+}
+
+function collectMaliciousUrlEntries(files, maliciousHostIndex) {
+  const entries = [];
+  const seen = new Set();
+
+  for (const file of files) {
+    const deobfuscatedContent = deobfuscateSource(file.content);
+    for (const entry of extractMaliciousUrlEntries(deobfuscatedContent, maliciousHostIndex)) {
+      const key = `${file.relativePath} ${entry.url}`;
+      if (seen.has(key)) {
+        continue;
+      }
+
+      seen.add(key);
+      entries.push({
+        file: file.relativePath,
+        url: entry.url,
+        host: entry.host,
+        service: entry.service,
+        matchedDomain: entry.matchedDomain
+      });
+    }
+  }
+
+  return entries;
+}
+
+function extractMaliciousUrlEntries(content, maliciousHostIndex) {
+  return extractInterestingUrls(content)
+    .map((url) => classifyMaliciousUrl(url, maliciousHostIndex))
+    .filter(Boolean);
+}
+
+function extractMaliciousUrls(content, maliciousHostIndex) {
+  return extractMaliciousUrlEntries(content, maliciousHostIndex).map((entry) => entry.url);
+}
+
+function extractInterestingUrls(content) {
+  const matches = String(content || '').match(urlPattern) || [];
+  return [...new Set(matches.map(normalizeUrlMatch).filter(Boolean))];
+}
+
+function normalizeUrlMatch(match) {
+  return String(match || '').replace(/[.,;:!?]+$/g, '');
+}
+
+function isDiscordWebhookUrl(url) {
+  return /https?:\/\/(?:canary\.|ptb\.)?discord(?:app)?\.com\/api\/webhooks\/\d+\/[A-Za-z0-9._-]+/i.test(url);
+}
+
+function classifyMaliciousUrl(url, maliciousHostIndex) {
+  const normalizedUrl = normalizeUrlMatch(url);
+  if (!normalizedUrl) {
+    return null;
+  }
+
+  if (isDiscordWebhookUrl(normalizedUrl)) {
+    return {
+      url: normalizedUrl,
+      host: extractUrlHost(normalizedUrl),
+      service: 'discord-webhook',
+      matchedDomain: extractUrlHost(normalizedUrl)
+    };
+  }
+
+  const host = extractUrlHost(normalizedUrl);
+  if (!host) {
+    return null;
+  }
+
+  const match = findMaliciousDomainMatch(host, maliciousHostIndex);
+  if (!match) {
+    return null;
+  }
+
+  return {
+    url: normalizedUrl,
+    host,
+    service: match.service,
+    matchedDomain: match.domain
+  };
+}
+
+function findMaliciousDomainMatch(host, maliciousHostIndex) {
+  const normalizedHost = String(host || '').toLowerCase();
+  if (!normalizedHost) {
+    return null;
+  }
+
+  const hostParts = normalizedHost.split('.');
+  for (let index = 0; index < hostParts.length - 1; index += 1) {
+    const candidate = hostParts.slice(index).join('.');
+    const service = maliciousHostIndex.get(candidate);
+    if (service) {
+      return { domain: candidate, service };
+    }
+  }
+
+  return null;
+}
+
+async function getMaliciousHostIndex() {
+  const now = Date.now();
+  if (cachedMaliciousHostIndex && cachedMaliciousHostIndexExpiresAt > now) {
+    return cachedMaliciousHostIndex;
+  }
+
+  try {
+    const response = await fetch(maliciousDomainFeedUrl, {
+      cache: 'no-store'
+    });
+    if (!response.ok) {
+      throw new Error(`Feed returned ${response.status}`);
+    }
+
+    const payload = await response.json();
+    cachedMaliciousHostIndex = buildMaliciousHostIndex(payload);
+    cachedMaliciousHostIndexExpiresAt = now + 60 * 60 * 1000;
+    return cachedMaliciousHostIndex;
+  } catch {
+    cachedMaliciousHostIndex = new Map();
+    cachedMaliciousHostIndexExpiresAt = now + 5 * 60 * 1000;
+    return cachedMaliciousHostIndex;
+  }
+}
+
+function buildMaliciousHostIndex(payload) {
+  const hostIndex = new Map();
+  const groups = payload?.badhosts;
+  if (!groups || typeof groups !== 'object') {
+    return hostIndex;
+  }
+
+  for (const [service, domains] of Object.entries(groups)) {
+    if (!Array.isArray(domains)) {
+      continue;
+    }
+
+    for (const domain of domains) {
+      const normalizedDomain = String(domain || '').trim().toLowerCase();
+      if (!/^[a-z0-9]([a-z0-9\-.]*[a-z0-9])?$/.test(normalizedDomain) || !normalizedDomain.includes('.')) {
+        continue;
+      }
+
+      hostIndex.set(normalizedDomain, service);
+    }
+  }
+
+  return hostIndex;
+}
+
+function extractUrlHost(url) {
+  try {
+    return new URL(url).host;
+  } catch {
+    return null;
+  }
 }

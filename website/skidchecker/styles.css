@@ -506,7 +506,8 @@ button:disabled {
 .source-dialog-close,
 .source-dialog-download,
 .download-regular-button,
-.download-deobfuscated-button {
+.download-deobfuscated-button,
+.share-scan-link {
   width: auto;
   margin-top: 0;
   padding: 0.75rem 1rem;
@@ -523,10 +524,15 @@ button:disabled {
 
 .download-regular-button,
 .download-deobfuscated-button,
-.source-dialog-download {
+.source-dialog-download,
+.share-scan-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(174, 201, 255, 0.16);
   color: #e9edf5;
+  text-decoration: none;
 }
 
 .source-button:hover,
@@ -535,10 +541,19 @@ button:disabled {
 .download-regular-button:focus,
 .download-deobfuscated-button:hover,
 .download-deobfuscated-button:focus,
+.share-scan-link:hover,
+.share-scan-link:focus,
 .source-dialog-download:hover,
 .source-dialog-download:focus {
   background: linear-gradient(135deg, rgba(143, 125, 255, 0.24), rgba(80, 216, 255, 0.14));
   box-shadow: 0 10px 22px rgba(8, 13, 32, 0.24);
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 .progress-header,

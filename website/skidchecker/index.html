@@ -150,7 +150,12 @@
             <div class="result-actions">
               <button id="result-download-regular" class="download-regular-button" type="button" disabled>Download regular</button>
               <button id="result-download-deobfuscated" class="download-deobfuscated-button" type="button" disabled>Download deobfuscated</button>
+              <a id="result-share-link" class="share-scan-link" href="#" hidden>Saved scan</a>
             </div>
+            <section id="result-url-panel" class="webhook-panel" hidden>
+              <p class="webhook-title">Malicious URLs found in source</p>
+              <ul id="result-url-list" class="webhook-list"></ul>
+            </section>
           </section>
 
           <section class="card detections-card">
@@ -250,7 +255,7 @@
           <button class="source-button" type="button">View full file</button>
         </div>
         <section class="webhook-panel" hidden>
-          <p class="webhook-title">Discord webhooks found in deobfuscated source</p>
+          <p class="webhook-title">Malicious URLs found in deobfuscated source</p>
           <ul class="webhook-list"></ul>
         </section>
       </article>
@@ -304,7 +309,7 @@
           </div>
         </div>
         <section id="source-dialog-webhooks" class="webhook-panel" hidden>
-          <p class="webhook-title">Discord webhooks found in deobfuscated source</p>
+          <p class="webhook-title">Malicious URLs found in deobfuscated source</p>
           <ul id="source-dialog-webhook-list" class="webhook-list"></ul>
         </section>
         <pre id="source-dialog-code" class="source-dialog-code"></pre>

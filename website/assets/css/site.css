@@ -273,6 +273,213 @@ section {
 	pointer-events: none;
 }
 
+.video-meta-page {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 3rem 1.25rem;
+	min-height: 100vh;
+}
+
+.video-meta-shell {
+	width: min(980px, 100%);
+	padding: clamp(1.4rem, 3vw, 2rem);
+	border: 1px solid rgba(174, 201, 255, .18);
+	border-radius: 28px;
+	background: linear-gradient(180deg, rgba(15, 21, 44, .86), rgba(10, 15, 32, .78));
+	box-shadow: 0 26px 80px rgba(0, 0, 0, .3);
+	backdrop-filter: blur(18px);
+}
+
+.video-meta-kicker {
+	margin: 0 0 .85rem;
+	font-size: .82rem;
+	font-weight: 700;
+	letter-spacing: .16em;
+	text-transform: uppercase;
+	color: #9cc8ff;
+}
+
+.video-meta-title {
+	margin: 0;
+	font-size: clamp(2rem, 5vw, 3.8rem);
+	line-height: 1.02;
+	color: #f6f8ff;
+}
+
+.video-meta-lead {
+	max-width: 68ch;
+	margin: 1rem 0 1.5rem;
+	color: #ced8f6;
+	font-size: 1.02rem;
+	line-height: 1.65;
+}
+
+.video-meta-lead span {
+	color: #ffffff;
+	font-weight: 700;
+}
+
+.video-meta-form {
+	display: grid;
+	gap: .75rem;
+	margin-bottom: 1rem;
+}
+
+.video-meta-label {
+	font-weight: 700;
+	color: #eef4ff;
+}
+
+.video-meta-input-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: .85rem;
+}
+
+.video-meta-input-row input {
+	min-width: 0;
+	padding: .95rem 1rem;
+	border-radius: 16px;
+	border: 1px solid rgba(196, 221, 255, .2);
+	background: rgba(255, 255, 255, .05);
+	color: #f7f9ff;
+	outline: none;
+	box-shadow: inset 0 0 0 1px transparent;
+	transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+
+.video-meta-input-row input:focus {
+	border-color: rgba(143, 125, 255, .65);
+	box-shadow: 0 0 0 4px rgba(143, 125, 255, .14);
+	background: rgba(255, 255, 255, .08);
+}
+
+.video-meta-help {
+	margin: 0;
+	color: #9eadd0;
+	font-size: .95rem;
+}
+
+.video-meta-status {
+	min-height: 1.5rem;
+	margin-bottom: 1rem;
+	color: #dbe7ff;
+	font-weight: 600;
+}
+
+.video-meta-status[data-tone="success"] {
+	color: #9fe4c4;
+}
+
+.video-meta-status[data-tone="error"] {
+	color: #ffb5bf;
+}
+
+.video-meta-card {
+	display: grid;
+	grid-template-columns: minmax(240px, 360px) minmax(0, 1fr);
+	gap: 1.4rem;
+	padding: 1rem;
+	border: 1px solid rgba(174, 201, 255, .18);
+	border-radius: 24px;
+	background: rgba(255, 255, 255, .04);
+}
+
+.video-meta-media img {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	border-radius: 18px;
+	border: 1px solid rgba(255, 255, 255, .12);
+	background: rgba(255, 255, 255, .04);
+}
+
+.video-meta-badge {
+	display: inline-flex;
+	align-items: center;
+	margin: 0 0 .75rem;
+	padding: .35rem .65rem;
+	border-radius: 999px;
+	background: rgba(143, 125, 255, .16);
+	border: 1px solid rgba(143, 125, 255, .3);
+	color: #ded8ff;
+	font-size: .85rem;
+	font-weight: 700;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+}
+
+.video-meta-content h2 {
+	margin: 0;
+	font-size: clamp(1.6rem, 3vw, 2.4rem);
+	line-height: 1.1;
+	color: #ffffff;
+}
+
+.video-meta-author {
+	margin: .65rem 0 1rem;
+	color: #9fd6ff;
+	font-weight: 700;
+}
+
+.video-meta-description {
+	margin: 0 0 1rem;
+	color: #d4ddf8;
+	line-height: 1.65;
+}
+
+.video-meta-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: .95rem;
+	margin: 0;
+}
+
+.video-meta-grid div {
+	padding: .9rem 1rem;
+	border-radius: 18px;
+	border: 1px solid rgba(255, 255, 255, .09);
+	background: rgba(6, 10, 26, .34);
+}
+
+.video-meta-grid dt {
+	margin: 0 0 .45rem;
+	font-size: .78rem;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+	color: #93a6cf;
+}
+
+.video-meta-grid dd {
+	margin: 0;
+	color: #ffffff;
+	word-break: break-word;
+}
+
+.video-meta-grid a {
+	color: #8fd6ff;
+	text-decoration: none;
+}
+
+.video-meta-grid a:hover,
+.video-meta-grid a:focus {
+	color: #ffffff;
+	text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+	.video-meta-input-row,
+	.video-meta-card,
+	.video-meta-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.video-meta-shell {
+		border-radius: 22px;
+	}
+}
+
 .glass-card {
 	background: rgba(13, 18, 38, .84);
 	border: 1px solid var(--surface-border);

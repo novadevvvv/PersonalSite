@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>YouTube Mirror | novaa.dev</title>
+	<meta name="description" content="View public YouTube video metadata from a rewritten novaa.dev URL.">
+	<link href="../assets/css/site.css" rel="stylesheet">
+</head>
+<body>
+	<main class="video-meta-page">
+		<section class="video-meta-shell">
+			<p class="video-meta-kicker">Static GitHub Pages view</p>
+			<h1 class="video-meta-title">Video Information</h1>
+			<p class="video-meta-lead">Paste or open a rewritten YouTube URL like <span>https://youtube.novaa.dev/watch?v=dQw4w9WgXcQ</span> and this page will show the public metadata that can be resolved in the browser.</p>
+
+			<form id="videoMetaForm" class="video-meta-form" novalidate>
+				<label class="video-meta-label" for="videoUrlInput">YouTube URL</label>
+				<div class="video-meta-input-row">
+					<input id="videoUrlInput" name="url" type="url" inputmode="url" autocomplete="off" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+					<button type="submit" class="btn btn-primary">Load Info</button>
+				</div>
+				<p class="video-meta-help">This page does not download media. It resolves the video ID and displays public info only.</p>
+			</form>
+
+			<div id="videoMetaStatus" class="video-meta-status" aria-live="polite"></div>
+
+			<article id="videoMetaCard" class="video-meta-card" hidden>
+				<div class="video-meta-media">
+					<img id="videoMetaThumbnail" alt="">
+				</div>
+				<div class="video-meta-content">
+					<p id="videoMetaBadge" class="video-meta-badge"></p>
+					<h2 id="videoMetaHeading"></h2>
+					<p id="videoMetaAuthor" class="video-meta-author"></p>
+					<p id="videoMetaDescription" class="video-meta-description"></p>
+					<dl class="video-meta-grid">
+						<div>
+							<dt>Video ID</dt>
+							<dd id="videoMetaId"></dd>
+						</div>
+						<div>
+							<dt>Original Link</dt>
+							<dd><a id="videoMetaLink" href="#" target="_blank" rel="noreferrer">Open on YouTube</a></dd>
+						</div>
+						<div>
+							<dt>Embed</dt>
+							<dd><a id="videoMetaEmbed" href="#" target="_blank" rel="noreferrer">Open embed</a></dd>
+						</div>
+						<div>
+							<dt>Resolved At</dt>
+							<dd id="videoMetaResolvedAt"></dd>
+						</div>
+					</dl>
+				</div>
+			</article>
+		</section>
+	</main>
+	<script type="module" src="../assets/js/youtube-watch-page.js"></script>
+	<script src="../assets/js/availability-banner.js"></script>
+	<script src="../assets/js/galaxy-effects.js"></script>
+</body>
+</html>

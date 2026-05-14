@@ -7,7 +7,7 @@
 			"command": "npx",
 			"args": [
 				"serve",
-				"website",
+				".",
 				"-l",
 				"8080"
 			],

@@ -1,0 +1,40 @@
+:root {
+	color-scheme: dark;
+}
+
+html.single-page-pending,
+html.single-page-pending body {
+	min-height: 100%;
+	margin: 0;
+	background: #000;
+	color: #fff;
+}
+
+html.single-page-pending body {
+	visibility: hidden;
+}
+
+body.single-page-body {
+	margin: 0;
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+	background: #000;
+	color: #fff;
+	font-family: "Segoe UI", Arial, sans-serif;
+	text-align: center;
+	visibility: visible;
+}
+
+.single-page-shell {
+	padding: 24px;
+}
+
+.single-page-title {
+	margin: 0;
+	font-size: clamp(2rem, 8vw, 5rem);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: lowercase;
+	color: #fff;
+}

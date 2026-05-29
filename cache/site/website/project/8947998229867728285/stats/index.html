@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="../../../">
+    <title>Nova • DBS-Breakthrough Stats</title>
+    <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" rel="stylesheet">
+    <link href="../../../assets/css/site.css" rel="stylesheet">
+    <script>document.documentElement.classList.add("single-page-pending");</script>
+    <link rel="stylesheet" href="/assets/css/single-page.css">
+    <script src="/assets/js/single-page.js" defer></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container py-2">
+            <a class="navbar-brand fw-bold" href="home/">Nova</a>
+            <div class="ms-auto d-flex gap-2 flex-wrap topbar-tabs justify-content-end">
+                <a href="skidchecker/" class="topbar-tab"><i class="fa-solid fa-shield-halved"></i><span>SkidChecker</span></a>
+                <a href="projects.html" class="topbar-tab"><i class="fa-solid fa-table-cells-large"></i><span>All Projects</span></a>
+                <a href="home/" class="topbar-tab"><i class="fa-solid fa-arrow-left"></i><span>Home</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="py-3">
+        <div class="container py-2">
+            <div class="glass-card">
+                <h1 class="fw-bold mb-2">DBS-Breakthrough</h1>
+                <p class="text-secondary mb-4">&lt; SHATTER THE LIMIT &gt;<br><br>Fight it out as your favorite characters in ^DBS-Breakthrough, a DB Super themed fighting game with an expansive roster of Characters, built with care around, and for, immersive and highly explosive battles entirely available in VR!</p>
+                <div class="row g-3">
+                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">281,965</p><small class="text-secondary">Visits</small></div></div>
+                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">121,029</p><small class="text-secondary">Unique Players</small></div></div>
+                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">7,756</p><small class="text-secondary">Favorites</small></div></div>
+                    <div class="col-12 col-md-3"><div class="totals-item"><p class="totals-number mb-1">9,666</p><small class="text-secondary">Cheers</small></div></div>
+                </div>
+                <div class="row g-3 mt-2 mb-4">
+                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">91,188</p><small class="text-secondary">Total Growth</small></div></div>
+                    <div class="col-12 col-md-6"><div class="totals-item"><p class="totals-number mb-1">3,377</p><small class="text-secondary">Avg Daily Growth</small></div></div>
+                </div>
+                <div class="mb-3 d-flex justify-content-end">
+                    <label for="metricSelector" class="visually-hidden">Chart metric</label>
+                    <select id="metricSelector" class="form-select form-select-sm" style="max-width: 220px; background: rgba(15, 23, 42, 0.75); border-color: rgba(34, 211, 238, 0.35); color: rgba(233, 237, 245, 0.95);">
+                        <option value="visits" selected>Visits</option>
+                        <option value="growth">Daily Growth</option>
+                        <option value="favorites">Favorites</option>
+                        <option value="cheers">Cheers</option>
+                    </select>
+                </div>
+                <div style="position:relative;min-height:320px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.1);border-radius:.9rem;padding:.75rem;">
+                    <canvas id="visitsChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="assets/js/availability-banner.js"></script>
+    <script src="assets/js/galaxy-effects.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+        const labels = ["2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-21", "2026-03-22", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27", "2026-03-28", "2026-03-29", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06"];
+        const visitsData = [190777, 194908, 197533, 200732, 206127, 213029, 217915, 221480, 224605, 227576, 230964, 235500, 240290, 243374, 245898, 248491, 250938, 253522, 257895, 261515, 263930, 266578, 269350, 272056, 275299, 278410, 281211, 281965];
+        const favoritesData = [5818, 5927, 6000, 6086, 6220, 6373, 6477, 6554, 6603, 6667, 6742, 6829, 6926, 6986, 7037, 7088, 7136, 7193, 7274, 7351, 7394, 7433, 7488, 7543, 7613, 7675, 7734, 7756];
+        const cheersData = [6995, 7148, 7229, 7337, 7526, 7729, 7862, 7974, 8063, 8153, 8250, 8363, 8491, 8566, 8645, 8713, 8778, 8872, 8974, 9075, 9135, 9199, 9286, 9355, 9458, 9566, 9642, 9666];
+        const growthData = [0, 4131, 2625, 3199, 5395, 6902, 4886, 3565, 3125, 2971, 3388, 4536, 4790, 3084, 2524, 2593, 2447, 2584, 4373, 3620, 2415, 2648, 2772, 2706, 3243, 3111, 2801, 754];
+
+        const metricConfig = {
+            visits: { label: "Visits", color: "rgba(34, 211, 238, 0.95)", fill: "rgba(34, 211, 238, 0.18)", data: visitsData },
+            growth: { label: "Daily Growth", color: "rgba(45, 212, 191, 0.95)", fill: "rgba(45, 212, 191, 0.18)", data: growthData },
+            favorites: { label: "Favorites", color: "rgba(250, 204, 21, 0.95)", fill: "rgba(250, 204, 21, 0.18)", data: favoritesData },
+            cheers: { label: "Cheers", color: "rgba(248, 113, 113, 0.95)", fill: "rgba(248, 113, 113, 0.18)", data: cheersData },
+        };
+
+        const calcAxisBounds = (series) => {
+            const minValue = Math.min(...series);
+            const maxValue = Math.max(...series);
+            const valueRange = Math.max(maxValue - minValue, 1);
+            const axisPadding = Math.max(Math.ceil(valueRange * 0.12), 1);
+            return {
+                min: Math.max(minValue - axisPadding, 0),
+                max: maxValue + axisPadding,
+            };
+        };
+
+        const initialMetric = "visits";
+        const initialBounds = calcAxisBounds(metricConfig[initialMetric].data);
+
+        new window.Chart(document.getElementById("visitsChart"), {
+            type: "line",
+            data: {
+                labels,
+                datasets: [{
+                    label: metricConfig[initialMetric].label,
+                    data: metricConfig[initialMetric].data,
+                    borderColor: metricConfig[initialMetric].color,
+                    backgroundColor: metricConfig[initialMetric].fill,
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: {
+                        ticks: { color: "rgba(233, 237, 245, 0.7)", autoSkip: false, maxRotation: 0, minRotation: 0 },
+                        grid: { color: "rgba(255,255,255,0.08)" },
+                    },
+                    y: {
+                        beginAtZero: false,
+                        min: initialBounds.min,
+                        max: initialBounds.max,
+                        ticks: { color: "rgba(233, 237, 245, 0.7)" },
+                        grid: { color: "rgba(255,255,255,0.08)" },
+                    },
+                },
+            },
+        });
+
+        const chart = window.Chart.getChart("visitsChart");
+        const selector = document.getElementById("metricSelector");
+
+        selector.addEventListener("change", (event) => {
+            const metric = event.target.value;
+            const selected = metricConfig[metric] || metricConfig.visits;
+            const bounds = calcAxisBounds(selected.data);
+
+            chart.data.datasets[0].label = selected.label;
+            chart.data.datasets[0].data = selected.data;
+            chart.data.datasets[0].borderColor = selected.color;
+            chart.data.datasets[0].backgroundColor = selected.fill;
+            chart.options.scales.y.min = bounds.min;
+            chart.options.scales.y.max = bounds.max;
+            chart.update();
+        });
+    </script>
+</body>
+</html>

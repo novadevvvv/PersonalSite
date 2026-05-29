@@ -1,0 +1,48 @@
+[
+    {
+        "slug": "spire-network",
+        "title": "Spire Network",
+        "description": "A creator-focused platform for user-generated worlds and games, built on vanilla Minecraft with no client-side mods required.",
+        "imageUrl": "assets/images/spirenetwork/banner.jpg",
+        "featured": true,
+        "status": "Featured Project",
+        "note": "Current flagship project. Public release is not confirmed.",
+        "snapshotDate": "2026-04-06",
+        "cta": {
+            "label": "Join the Discord",
+            "url": "https://discord.spire-mc.net/"
+        }
+    },
+    {
+        "slug": "dbs-breakthrough",
+        "title": "DBS-Breakthrough",
+        "description": "< SHATTER THE LIMIT >\n\nFight it out as your favorite characters in DBS-Breakthrough, a Dragon Ball Super inspired fighting game built for explosive VR battles and a large playable roster.",
+        "imageUrl": "assets/images/recroom/dbs-breakthrough.jpg",
+        "archived": true,
+        "status": "Archived Rec Room Project",
+        "note": "Rec Room is shutting down in June 2026. This room will become inaccessible after shutdown, so this page preserves a static snapshot only.",
+        "snapshotDate": "2026-04-06",
+        "stats": {
+            "cheerCount": 9666,
+            "favoriteCount": 7756,
+            "visitCount": 281965,
+            "visitorCount": 121029
+        }
+    },
+    {
+        "slug": "breakthrough-open-beta",
+        "title": "Breakthrough Open Beta",
+        "description": "An archived beta build created during the early development of DBS-Breakthrough. It remains here as a record of the project’s earlier public milestone.",
+        "imageUrl": "assets/images/recroom/breakthroughopenbeta.jpg",
+        "archived": true,
+        "status": "Archived Rec Room Project",
+        "note": "Rec Room is shutting down in June 2026. This archived room will no longer be accessible once the platform closes.",
+        "snapshotDate": "2026-04-06",
+        "stats": {
+            "cheerCount": 2273,
+            "favoriteCount": 2824,
+            "visitCount": 120607,
+            "visitorCount": 24059
+        }
+    }
+]

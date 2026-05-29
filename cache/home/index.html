@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>nova</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="./styles/base.css">
+	<link rel="stylesheet" href="./styles/components.css">
+</head>
+<body>
+	<div id="app-root"></div>
+	<script>
+		async function initializePage() {
+			const appRoot = document.getElementById("app-root");
+			const response = await fetch("./partials/main-content.html");
+			appRoot.innerHTML = await response.text();
+
+			const audio = document.getElementById("audio-player");
+			const playButton = document.getElementById("play-button");
+			const progressBar = document.getElementById("progress-bar");
+			const currentTime = document.getElementById("current-time");
+			const duration = document.getElementById("duration");
+
+			function formatTime(value) {
+				if (!Number.isFinite(value)) {
+					return "0:00";
+				}
+
+				const minutes = Math.floor(value / 60);
+				const seconds = Math.floor(value % 60);
+				return `${minutes}:${String(seconds).padStart(2, "0")}`;
+			}
+
+			function setProgress(value) {
+				progressBar.value = value;
+				progressBar.style.background = `linear-gradient(90deg, var(--accent) 0%, var(--accent) ${value}%, rgba(46, 124, 151, 0.12) ${value}%, rgba(46, 124, 151, 0.12) 100%)`;
+			}
+
+			function syncButton() {
+				playButton.innerHTML = audio.paused
+					? '<i class="bi bi-play-fill"></i>'
+					: '<i class="bi bi-pause-fill"></i>';
+				playButton.setAttribute("aria-label", audio.paused ? "Play track" : "Pause track");
+			}
+
+			playButton.addEventListener("click", async () => {
+				if (!audio.getAttribute("src") && !audio.querySelector("source")?.getAttribute("src")) {
+					return;
+				}
+
+				try {
+					if (audio.paused) {
+						await audio.play();
+					} else {
+						audio.pause();
+					}
+				} catch {
+					playButton.disabled = true;
+				}
+			});
+
+			audio.addEventListener("loadedmetadata", () => {
+				duration.textContent = formatTime(audio.duration);
+				playButton.disabled = false;
+			});
+
+			audio.addEventListener("timeupdate", () => {
+				const percent = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+				setProgress(percent);
+				currentTime.textContent = formatTime(audio.currentTime);
+			});
+
+			audio.addEventListener("play", syncButton);
+			audio.addEventListener("pause", syncButton);
+			audio.addEventListener("ended", () => {
+				audio.currentTime = 0;
+				setProgress(0);
+				syncButton();
+			});
+
+			audio.addEventListener("error", () => {
+				playButton.disabled = true;
+				duration.textContent = "upload is.mp3";
+			});
+
+			progressBar.addEventListener("input", () => {
+				setProgress(progressBar.value);
+			});
+
+			progressBar.addEventListener("change", () => {
+				if (audio.duration) {
+					audio.currentTime = (progressBar.value / 100) * audio.duration;
+				}
+			});
+
+			playButton.disabled = true;
+			audio.volume = 0.055;
+			setProgress(0);
+			syncButton();
+		}
+
+		initializePage();
+	</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+@font-face {
+  font-family: 'Inter_18pt-Bold';
+  src: url('../webfont/Inter_18pt-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.emoji {
+  width: 20px;
+  height: 20px;
+
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px;
+  font-family: 'Inter_18pt-Bold', sans-serif;
+}
+
+.reversed {
+  flex-direction: row-reverse;
+}
+.content img {
+  margin-left: auto;
+}
+
+/* Top navigation bar */
+.topnav {
+  background-image: url('../patterns/1.png');
+  background-size: 500px 500px;
+  background-repeat: repeat;
+  overflow: hidden;
+  color: #f2f2f2;
+  padding: 0px 0px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  padding: 0px 5px;
+  gap: 5px;
+} 
+
+.nav-text {
+  font-family: 'Inter_18pt-Bold', sans-serif;
+  font-size: 17px;
+  color: #f2f2f2;
+  padding-left: 10px;
+}
+
+.library {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.library img {
+  width: 20%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.blog {
+  max-width: 800px;
+  padding: 20px;
+  font-family: 'Inter_18pt-Bold', sans-serif;
+}
+
+/* Links */
+.topnav a {
+  color: #f2f2f2;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  display: block;
+  font-family: 'Inter_18pt-Bold', sans-serif;
+  align-items: center;
+}
+
+/* Hover */
+.topnav a.hover {
+  color: rgb(255, 255, 255);
+}
+
+/* Active */
+.topnav a.active {
+  color: rgb(255, 255, 255);
+  position: relative;
+}
+
+.topnav a.active::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 1;
+  transform: translateX(-50%) scale(.75);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.topnav a.hover::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 1;
+  transform: translateX(-50%) scale(.5);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}

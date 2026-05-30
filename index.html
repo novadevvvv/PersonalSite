@@ -20,7 +20,7 @@
 <div class="content">
   <div class="text-content">
     <h1><img class="emoji" src="./src/data/images/thumbsup.png" alt="thumbsup" width="20"> a bit about me</h1>
-    <p><img class="emoji" src="./src/data/images/hearteyes.png" alt="hearteyes" width="20"> • orbiting around the sun for %years%</p>
+    <p><img class="emoji" src="./src/data/images/hearteyes.png" alt="hearteyes" width="20"> • orbiting around the sun for <span id="years-since"></span></p>
     <p><img class="emoji" src="./src/data/images/stupid_fuck.png" alt="stupid_fuck" width="20"> • lesbian</p>
     <p><img class="emoji" src="./src/data/images/stompstomp.gif" alt="stomp stim" width="20"> • tgirl</p>
     <p><img class="emoji" src="./src/data/images/calico_legrub.png" alt="calico legrub" width="20"> • furry (calico, shark)</p>
@@ -31,6 +31,32 @@
 <div class="library"></div>
 
 <script>
+// Calculate years since Oct 29, 2010 in Adelaide time (UTC+9:30)
+function getAdelaideYearsSince(dateString) {
+  // Adelaide is UTC+9:30
+  const adelaideOffset = 10.5 * 60; // minutes (accounts for DST)
+  const now = new Date();
+  // Convert now to Adelaide time
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const adelaideNow = new Date(utc + (adelaideOffset * 60000));
+  const start = new Date(dateString);
+  // Calculate difference in years
+  let years = adelaideNow.getFullYear() - start.getFullYear();
+  // If before the anniversary this year, subtract 1
+  if (
+    adelaideNow.getMonth() < start.getMonth() ||
+    (adelaideNow.getMonth() === start.getMonth() && adelaideNow.getDate() < start.getDate())
+  ) {
+    years--;
+  }
+  return years;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const years = getAdelaideYearsSince('2010-10-29T00:00:00+09:30');
+  const yearsSpan = document.getElementById('years-since');
+  if (yearsSpan) yearsSpan.textContent = years;
+});
 fetch('/api/library')
   .then(res => res.json())
   .then(libraryImages => {

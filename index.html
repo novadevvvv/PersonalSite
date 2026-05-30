@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../src/data/styles/styles.css">
+    <link rel="stylesheet" href="./src/data/styles/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
@@ -11,39 +11,59 @@
 </div>
 <div class="content">
   <div class="text-content">
-    <h1><img class="emoji" src="../src/data/images/blahaj.png" alt="blahaj" width="20"> hai :3</h1>
+    <h1><img class="emoji" src="./src/data/images/blahaj.png" alt="blahaj" width="20"> hai :3</h1>
     <p>i'm nova!</p>
   </div>
-  <img src="../src/data/images/Miku.png" alt="Miku" width="200">
+  <img src="./src/data/images/Miku.png" alt="Miku" width="200">
 </div>
 
 <div class="content">
   <div class="text-content">
-    <h1><img class="emoji" src="../src/data/images/thumbsup.png" alt="thumbsup" width="20"> a bit about me</h1>
-    <p><img class="emoji" src="../src/data/images/hearteyes.png" alt="hearteyes" width="20"> • orbiting around the sun for %years%</p>
-    <p><img class="emoji" src="../src/data/images/stupid_fuck.png" alt="stupid_fuck" width="20"> • lesbian</p>
-    <p><img class="emoji" src="../src/data/images/stompstomp.gif" alt="stomp stim" width="20"> • tgirl</p>
-    <p><img class="emoji" src="../src/data/images/calico_legrub.png" alt="calico legrub" width="20"> • furry (calico, shark)</p>
+    <h1><img class="emoji" src="./src/data/images/thumbsup.png" alt="thumbsup" width="20"> a bit about me</h1>
+    <p><img class="emoji" src="./src/data/images/hearteyes.png" alt="hearteyes" width="20"> • orbiting around the sun for <span id="years-since"></span> sols 💕 (look up what sol is)</p>
+    <p><img class="emoji" src="./src/data/images/stupid_fuck.png" alt="stupid_fuck" width="20"> • lesbian</p>
+    <p><img class="emoji" src="./src/data/images/stompstomp.gif" alt="stomp stim" width="20"> • tgirl</p>
+    <p><img class="emoji" src="./src/data/images/calico_legrub.png" alt="calico legrub" width="20"> • furry (calico, shark)</p>
   </div>
-  <img src="../src/data/images/Teto.png" alt="Teto" width="200">
+  <img src="./src/data/images/Teto.png" alt="Teto" width="200">
 </div>
 
 <div class="library"></div>
 
 <script>
-fetch('/api/library')
-  .then(res => res.json())
-  .then(libraryImages => {
-    const libraryDiv = document.querySelector('.library');
+// Calculate Martian sols since Oct 29, 2010 in Adelaide time (UTC+9:30)
+function getAdelaideSolsSince(dateString) {
+  // Adelaide is UTC+9:30
+  const adelaideOffset = 10.5 * 60; // minutes (accounts for DST)
+  const now = new Date();
+  // Convert now to Adelaide time
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const adelaideNow = new Date(utc + (adelaideOffset * 60000));
+  const start = new Date(dateString);
+  // Martian sol: 24h 39m 35s = 88775 seconds
+  const solMs = (24 * 60 * 60 + 39 * 60 + 35) * 1000;
+  const diffMs = adelaideNow - start;
+  const sols = diffMs / solMs;
+  return sols;
+}
 
-    libraryImages.forEach(src => {
-      const img = document.createElement('img');
+document.addEventListener('DOMContentLoaded', function() {
+  const sols = getAdelaideSolsSince('2010-10-29T00:00:00+09:30');
+  const yearsSpan = document.getElementById('years-since');
+  if (yearsSpan) yearsSpan.textContent = sols.toLocaleString(undefined, { maximumFractionDigits: 2 });
 
-      img.src = src;
-      img.alt = src.split('/').pop();
-
-      libraryDiv.appendChild(img);
-    });
-  })
-  .catch(console.error);
+  // Fetch static library.json for images
+  fetch('src/data/library.json')
+    .then(res => res.json())
+    .then(libraryImages => {
+      const libraryDiv = document.querySelector('.library');
+      libraryImages.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = src.split('/').pop();
+        libraryDiv.appendChild(img);
+      });
+    })
+    .catch(console.error);
+});
 </script>

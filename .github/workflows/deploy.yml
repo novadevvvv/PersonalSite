@@ -17,6 +17,8 @@ jobs:
         run: npm install marked
       - name: Build blog HTML
         run: node build-blogs.js
+      - name: Generate library.json
+        run: node scripts/generate-library-json.js
       - name: Copy root/index.html to top-level if needed
         run: |
           cp root/index.html ./index.html
